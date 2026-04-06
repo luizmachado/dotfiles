@@ -247,13 +247,6 @@ ln -sf "$HOME/dotfiles/nvim" "$HOME/.config/nvim"
 rm -Rf "$HOME/.config/ghostty"
 ln -sf "$HOME/dotfiles/ghostty" "$HOME/.config/ghostty"
 
-# Google Drive
-rm -Rf "$HOME/gdrive"
-ln -sf "$HOME/Library/CloudStorage/GoogleDrive-todoespacoonline@gmail.com" "$HOME/gdrive"
-
-# Google Drive (Shorter)
-GDRIVE_PATH=$(find "$HOME/Library/CloudStorage" -maxdepth 1 -name "GoogleDrive-*" -type d | head -n 1)
-[ -n "$GDRIVE_PATH" ] && rm -f "$HOME/gdrive" && ln -s "$GDRIVE_PATH" "$HOME/gdrive"
 
 echo -e "
 [1;33mATENÇÃO: Passos manuais necessários:[0m"
