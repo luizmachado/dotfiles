@@ -1,5 +1,9 @@
 # dotfiles
 
+## Documentação
+
+Referência detalhada de atalhos e recursos de cada ferramenta em [`docs/`](docs/index.md).
+
 Fiz os testes no Ubuntu 24.04 e no macOS Sequoia (ARM). Todos os testes foram
 feitos com uma instalação limpa dos sistemas operacionais.
 
