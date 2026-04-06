@@ -12,7 +12,7 @@ mais fácil assim).
 Se mesmo com o aviso ainda quer rodar, faça isso com o git instalado:
 
 ```bash
-git clone git@github.com:luizomf/dotfiles.git ~/dotfiles
+git clone git@github.com:luizmachado/dotfiles.git ~/dotfiles
 cd ~/dotfiles
 ./install.sh
 ```
