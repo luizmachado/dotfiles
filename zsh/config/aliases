@@ -10,12 +10,8 @@ alias pipdeleteall='pip freeze | xargs pip uninstall -y'
 alias gitreset='git add . && git reset --hard'
 
 # Kill
-alias killcode='pkill -9 -f "Visual Studio Code"'
-alias killchrome='pkill -9 -f "Google Chrome"'
-alias killnode='pkill -9 -f node'
 alias killpython='pkill -9 -f python'
-alias killffmpeg='pkill -9 -f ffmpeg'
-alias killchromecode='killcode ; killchrome'
+alias killfirefox='pkill -9 -f firefox'
 
 # Linux
 alias sudo='sudo ' # this is needed to use your aliases with sudo
@@ -23,23 +19,15 @@ alias s='sudo'     # this is needed to use your aliases with sudo
 
 # Softwares
 alias nano='nvim' # se vira
+alias vi='nvim'
 
 alias brewupdate='brew update ; brew upgrade ; omz update ; brew cleanup ; brew bundle dump --file=~/dotfiles/homebrew/Brewfile --describe --force'
-alias killadobe='sudo pkill -9 -f "Adobe" ; sudo pkill -9 -f "ACCFinderSync" ; sudo pkill -9 -f "CCXProcess.app" ; sudo pkill -9 -f "Core Sync.app" ; sudo pkill -9 -f "CCLibrary.app"'
 
-# Mac OS
-alias cleanmacos='sudo purge; sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder; sudo rm -rf ~/Library/Logs/*; osascript -e "tell app \"Finder\" to empty Trash" &> /dev/null'
-
-alias zs='source ~/.zshrc'  # recarregar config rápido
+alias zs='source ~/.zshrc' # recarregar config rápido
 alias brewcheck='brew leaves | sort'
 
 # Tree ignorando .git, __pycache__, node_modules, .venv, dist, .DS_Store
 alias tre="tree --prune -a -C -I '__pycache__|node_modules|.git|.venv|dist|.DS_Store|*.egg*|.pytest_cache|.ruff_cache'"
-alias j="just"
 
 # Tmux
 alias makenote="tmux new-window \"~/dotfiles/tmux/scripts/make_note.sh\""
-
-# Loudterm
-alias cliplay="~/Desktop/tutoriais_e_cursos/loudterm/.venv/bin/python ~/Desktop/tutoriais_e_cursos/loudterm/src/loudterm/backend/kokoro82m/cliplay.py"
-

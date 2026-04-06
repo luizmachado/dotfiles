@@ -5,13 +5,6 @@
 # shellcheck disable=SC1091
 [[ -f ~/.env ]] && source "${HOME}/.env"
 
-if [[ -z "$SPLASH_SHOWN" ]]; then
-  export SPLASH_SHOWN=1
-  printf "%b\n\n" "$(< "${HOME}/dotfiles/zsh/splash.txt")"
-  # printf "%b\n\n" "$(cat "${HOME}/dotfiles/zsh/splash.txt")"
-fi
-
-
 ZSH_CONFIG_DIR="$HOME/dotfiles/zsh/config"
 
 CONFIG_CONFIG_FILE="${ZSH_CONFIG_DIR}/config"
@@ -22,9 +15,9 @@ KEYBINDS_CONFIG_FILE="${ZSH_CONFIG_DIR}/keybinds"
 
 ZSH_CONFIG_FILES=(
   "$CONFIG_CONFIG_FILE"
-  "$FUNCTIONS_CONFIG_FILE" 
+  "$FUNCTIONS_CONFIG_FILE"
   "$EXPORTS_CONFIG_FILE"
-  "$ALIASES_CONFIG_FILE" 
+  "$ALIASES_CONFIG_FILE"
   "$KEYBINDS_CONFIG_FILE"
 )
 
@@ -36,4 +29,3 @@ for f in "${ZSH_CONFIG_FILES[@]}"; do
     printf "%s" "404: $f not found.\n"
   fi
 done
-

@@ -28,8 +28,8 @@ export FZF_DEFAULT_OPTS='
   --separator="─" --scrollbar="│" --layout="reverse"'
 
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"                   # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion" # This loads nvm bash_completion
 
 # BE SURE TO FIX THE ENV VARIABLES
 # brew install libpq --build-from-source
@@ -66,13 +66,13 @@ eval "$(pyenv init -)"
 [ -f ~/.fzf.zsh ] && . "${HOME}/.fzf.zsh"
 
 if [[ "$(uname -s)" == "Linux" ]]; then
-  [[ -r "/home/linuxbrew/.linuxbrew/etc/profile.d/bash_completion.sh" ]] \
-    && . "/home/linuxbrew/.linuxbrew/etc/profile.d/bash_completion.sh"
+  [[ -r "/home/linuxbrew/.linuxbrew/etc/profile.d/bash_completion.sh" ]] &&
+    . "/home/linuxbrew/.linuxbrew/etc/profile.d/bash_completion.sh"
 fi
 
 if [[ "$(uname -s)" == "Darwin" ]]; then
-  [[ -r "/opt/homebrew/etc/profile.d/bash_completion.sh" ]] \
-    && . "/opt/homebrew/etc/profile.d/bash_completion.sh"
+  [[ -r "/opt/homebrew/etc/profile.d/bash_completion.sh" ]] &&
+    . "/opt/homebrew/etc/profile.d/bash_completion.sh"
 fi
 
 if [[ "$(command -v just)" && -f "Justfile" ]]; then
@@ -101,11 +101,13 @@ PATH="$BUN_INSTALL/bin:$PATH"
 # Added by Antigravity
 PATH="$HOME/.antigravity/antigravity/bin:$PATH"
 
+PATH="$PATH:/opt/nvim/"
+
 # pnpm
 export PNPM_HOME="/Users/luizotavio/Library/pnpm"
 case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
+*":$PNPM_HOME:"*) ;;
+*) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
 
