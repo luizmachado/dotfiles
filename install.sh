@@ -231,6 +231,14 @@ ln -sf "$HOME/dotfiles/zsh/config/omtheme.zsh-theme" "$ZSH_CUSTOM/themes/omtheme
 rm -Rf "$HOME/.gitconfig"
 ln -sf "$HOME/dotfiles/git/.gitconfig" "$HOME/.gitconfig"
 
+# Configura git para o root
+loginfo "Configurando perfil do git para o root..."
+sudo git config --global user.name "Luiz Augusto Machado"
+sudo git config --global user.email "luizmachado.to@gmail.com"
+sudo git config --global core.editor "nvim"
+sudo git config --global color.ui auto
+sudo git config --global credential.helper store
+
 # Tmux
 rm -Rf "$HOME/.tmux.conf"
 ln -sf "$HOME/dotfiles/tmux/.tmux.conf" "$HOME/.tmux.conf"
