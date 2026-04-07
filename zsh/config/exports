@@ -45,6 +45,7 @@ fi
 export PYENV_ROOT="${HOME}/.pyenv"
 PATH="${PYENV_ROOT}/bin:${PYENV_ROOT}/shims:${PATH}"
 eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
 
 . "$HOME/.local/bin/env"
 [ -f ~/.fzf.zsh ] && . "${HOME}/.fzf.zsh"

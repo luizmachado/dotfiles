@@ -243,6 +243,11 @@ echo "5. Execute 'pyenv global 3.13.5' (ou versões mais novas)"
 echo "6. Execute 'uv tool install pyright'"
 echo "7. Execute 'uv tool install ruff'"
 echo ""
+echo "Para criar um virtualenv por projeto:"
+echo "  pyenv virtualenv 3.13.5 meu-projeto-env"
+echo "  cd /caminho/do/projeto && pyenv local meu-projeto-env"
+echo "  # O .python-version criado ativa o venv automaticamente ao entrar no dir"
+echo ""
 read -p "Ao terminar as tarefas acima, pressione qualquer tecla para continuar..."
 
 # --- Criação de Symlinks ---
