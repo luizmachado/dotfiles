@@ -7,13 +7,13 @@ export EDITOR="nvim"
 export VISUAL="nvim"
 export TABSIZE=2
 export SSH_TERM="xterm-256color"
-export PROJECTS_DIR="${HOME}/Desktop/tutoriais_e_cursos"
+export PROJECTS_DIR="${HOME}/Documentos/Dev"
 
 ZSH_HIGHLIGHT_STYLES[comment]='fg=240'
 ZSH_HIGHLIGHT_STYLES[default]='fg=251'
 ZSH_HIGHLIGHT_STYLES[unknown-token]='fg=red,bold'
 
-export OLLAMA_HOST=192.168.0.109:11434
+export OLLAMA_HOST=127.0.0.1:11434
 export OLLAMA_TIMEOUT_MS=10000
 export OLLAMA_LOAD_TIMEOUT='10m'
 export OLLAMA_KEEP_ALIVE='10m'
@@ -37,25 +37,9 @@ export NVM_DIR="$HOME/.nvm"
 # brew install openssl
 # brew install curl
 
-# PKG_CONFIG_PATH acumulado corretamente
-export PKG_CONFIG_PATH="/opt/homebrew/opt/curl/lib/pkgconfig:$PKG_CONFIG_PATH"
-export PKG_CONFIG_PATH="/opt/homebrew/opt/sqlite/lib/pkgconfig:$PKG_CONFIG_PATH"
-
-# LDFLAGS (links de bibliotecas nativas)
-export LDFLAGS="-L/opt/homebrew/lib -L/opt/homebrew/opt/openssl/lib -L/opt/homebrew/opt/openssl@3/lib -L/opt/homebrew/opt/curl/lib -L/opt/homebrew/opt/mysql-client/lib -L/opt/homebrew/opt/libpq/lib -L/opt/homebrew/opt/sqlite/lib"
-
-# CPPFLAGS (cabeçalhos de compilação)
-export CPPFLAGS="-I/opt/homebrew/include -I/opt/homebrew/opt/openssl/include -I/opt/homebrew/opt/openssl@3/include -I/opt/homebrew/opt/curl/include -I/opt/homebrew/opt/mysql-client/include -I/opt/homebrew/opt/libpq/include -I/opt/homebrew/opt/sqlite/include"
-export BAT_STYLE="header"
-
-PATH="/opt/homebrew/opt/curl/bin:/opt/homebrew/opt/mysql-client/bin:/opt/homebrew/opt/libpq/bin:${PATH}"
-
 if [ "$(uname -s)" = "Linux" ]; then
   PATH="/home/linuxbrew/.linuxbrew/bin:${PATH}"
   eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-elif [ "$(uname -s)" = "Darwin" ]; then
-  PATH="/opt/homebrew/opt/sqlite/bin:${PATH}"
-  eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
 
 export PYENV_ROOT="${HOME}/.pyenv"
@@ -70,19 +54,6 @@ if [[ "$(uname -s)" == "Linux" ]]; then
     . "/home/linuxbrew/.linuxbrew/etc/profile.d/bash_completion.sh"
 fi
 
-if [[ "$(uname -s)" == "Darwin" ]]; then
-  [[ -r "/opt/homebrew/etc/profile.d/bash_completion.sh" ]] &&
-    . "/opt/homebrew/etc/profile.d/bash_completion.sh"
-fi
-
-if [[ "$(command -v just)" && -f "Justfile" ]]; then
-  eval "$(just --completions zsh)"
-fi
-
-if [[ "$(command -v codex)" ]]; then
-  eval "$(codex completion zsh)"
-fi
-
 if [[ "$(command -v docker)" && -f "${HOME}/.docker/completions/_docker" ]]; then
   eval "$(docker completion zsh)"
 fi
@@ -90,9 +61,6 @@ fi
 if [[ "$(command -v gh)" ]]; then
   eval "$(gh completion -s zsh)"
 fi
-
-# bun completions
-[ -s "/Users/luizotavio/.oh-my-zsh/completions/_bun" ] && source "/Users/luizotavio/.oh-my-zsh/completions/_bun"
 
 # bun
 export BUN_INSTALL="$HOME/.bun"
@@ -102,13 +70,5 @@ PATH="$BUN_INSTALL/bin:$PATH"
 PATH="$HOME/.antigravity/antigravity/bin:$PATH"
 
 PATH="$PATH:/opt/nvim/"
-
-# pnpm
-export PNPM_HOME="/Users/luizotavio/Library/pnpm"
-case ":$PATH:" in
-*":$PNPM_HOME:"*) ;;
-*) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-# pnpm end
 
 export PATH
