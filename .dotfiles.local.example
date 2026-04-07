@@ -1,0 +1,16 @@
+# ~/.dotfiles.local — valores pessoais desta máquina. NUNCA commitar.
+# Copiar de ~/dotfiles/.dotfiles.local.example e preencher com seus valores.
+# Sourced automaticamente pelo zsh em todo novo shell.
+
+# ── Identidade ────────────────────────────────────────────────────────────────
+# Usado pelo install.sh para criar ~/.gitconfig.local
+export DOTFILES_GIT_NAME="Seu Nome"
+export DOTFILES_GIT_EMAIL="voce@exemplo.com"
+
+# ── Esta máquina ──────────────────────────────────────────────────────────────
+export DOTFILES_HOSTNAME="$(hostname -s)"
+
+# ── Sync de histórico zsh ─────────────────────────────────────────────────────
+# Host SSH para buscar histórico remoto (zsh_history_sync.py).
+# Deixar vazio para desabilitar o sync remoto.
+export DOTFILES_HISTORY_SYNC_HOST=""

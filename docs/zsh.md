@@ -122,7 +122,6 @@ Habilitado com `bindkey -v`.
 | `updateall` | Atualiza tudo: Homebrew, Oh-My-Zsh, npm, pyenv, uv tools, histórico |
 | `cleanNeovimLogs` | Remove logs e cache do Neovim |
 | `restart_terminal` | Salva histórico, recarrega .zshrc e resincroniza tmux |
-| `commit_dotfiles msg` | Commit + push dos dotfiles e pull remoto nas outras máquinas |
 
 ### Ollama (LLM local)
 
@@ -170,7 +169,7 @@ O que o prompt exibe, da esquerda para a direita:
 | `EDITOR` / `VISUAL` | `nvim` | Editor padrão do sistema |
 | `TABSIZE` | `2` | Tamanho de tab |
 | `PROJECTS_DIR` | `~/Desktop/tutoriais_e_cursos` | Usado por funções tmux |
-| `OLLAMA_HOST` | `192.168.0.109:11434` | Servidor LLM local |
+| `OLLAMA_HOST` | `127.0.0.1:11434` | Servidor LLM local |
 | `KEYTIMEOUT` | `30` | Timeout de tecla no vi mode (ms) |
 | `BAT_STYLE` | `header` | Estilo padrão do `bat` |
 

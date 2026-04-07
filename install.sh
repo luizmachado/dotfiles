@@ -21,6 +21,44 @@ logerror() {
 	printf "🔴 ${RED}%s${RESET}\n" "$1"
 }
 
+logwarning() {
+	local YELLOW='\033[1;33m'
+	local RESET='\033[0m'
+	printf "🟡 ${YELLOW}%s${RESET}\n" "$1"
+}
+
+_setup_dotfiles_local() {
+	if [[ -f "${HOME}/.dotfiles.local" ]]; then
+		loginfo "~/.dotfiles.local já existe, pulando."
+		return
+	fi
+	cp "${HOME}/dotfiles/.dotfiles.local.example" "${HOME}/.dotfiles.local"
+	logwarning "Preencha ~/.dotfiles.local com seus valores pessoais antes de continuar."
+	printf "Pressione Enter quando pronto... "
+	read -r _
+}
+
+_setup_git_identity() {
+	if [[ -f "${HOME}/.gitconfig.local" ]]; then
+		loginfo "~/.gitconfig.local já existe, pulando."
+		return
+	fi
+	loginfo "Configurando identidade git..."
+	printf "Nome completo para commits git: "
+	read -r GIT_NAME
+	printf "Email para commits git: "
+	read -r GIT_EMAIL
+	printf '[user]\n\tname = %s\n\temail = %s\n[credential]\n\thelper = store\n' \
+		"$GIT_NAME" "$GIT_EMAIL" > "${HOME}/.gitconfig.local"
+	logsuccess "~/.gitconfig.local criado."
+	loginfo "Configurando git para o root..."
+	sudo git config --global user.name "$GIT_NAME"
+	sudo git config --global user.email "$GIT_EMAIL"
+	sudo git config --global core.editor "nvim"
+	sudo git config --global color.ui auto
+	sudo git config --global credential.helper store
+}
+
 # garante que o script pare em caso de erro
 set -e
 
@@ -230,13 +268,8 @@ ln -sf "$HOME/dotfiles/zsh/config/omtheme.zsh-theme" "$ZSH_CUSTOM/themes/omtheme
 rm -Rf "$HOME/.gitconfig"
 ln -sf "$HOME/dotfiles/git/.gitconfig" "$HOME/.gitconfig"
 
-# Configura git para o root
-loginfo "Configurando perfil do git para o root..."
-sudo git config --global user.name "Luiz Augusto Machado"
-sudo git config --global user.email "luizmachado.to@gmail.com"
-sudo git config --global core.editor "nvim"
-sudo git config --global color.ui auto
-sudo git config --global credential.helper store
+_setup_dotfiles_local
+_setup_git_identity
 
 # Tmux
 rm -Rf "$HOME/.tmux.conf"

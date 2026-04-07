@@ -97,7 +97,6 @@ Configuração modular carregada pelo `.zshrc`. Os arquivos ficam em `zsh/config
 - `cleanNeovimLogs` — limpa logs e cache do Neovim
 - `updateall` — atualiza Homebrew, pip, npm, nvim, tmux plugins e histórico
 - `ollama_stop_all` / `ollama_update_models` — gerencia LLMs locais
-- `commit_dotfiles` — sincroniza dotfiles entre máquinas via git + SSH
 - `backup_ssh` — faz backup criptografado (7zip) do diretório SSH
 
 **`config/keybinds`**
@@ -168,7 +167,7 @@ Instalação completa com:
 - **Editores**: neovim, vim
 - **Mídia**: ffmpeg, auto-editor, sox, vhs
 - **Build**: cmake, ninja-build, pkgconf, automake
-- **Rede**: wireguard-tools, wrk
+- **Rede**: wrk
 - **LLM local**: ollama
 - **Compressão**: p7zip, unzip
 - **macOS (casks)**: Ghostty, Docker Desktop, VS Code, Alfred, alt-tab, OBS, CapCut, VLC, AltDente, Keycastr
@@ -186,7 +185,6 @@ Instalação completa com:
 
 ### Scripts utilitários (`scripts/`)
 
-- **`wg_generator.sh`** — gera configs WireGuard para múltiplos nós da rede
 - **`zsh_history_sync.py`** — deduplica e sincroniza histórico do Zsh entre máquinas
 
 ---

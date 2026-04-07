@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # vim: set filetype=sh :
 
-# Local .env
+# Valores pessoais desta máquina (nunca commitado no repo)
 # shellcheck disable=SC1091
-[[ -f ~/.env ]] && source "${HOME}/.env"
+[[ -f "${HOME}/.dotfiles.local" ]] && source "${HOME}/.dotfiles.local"
 
 ZSH_CONFIG_DIR="$HOME/dotfiles/zsh/config"
 

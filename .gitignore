@@ -1,3 +1,9 @@
 # LOCALS
 .DS_Store
 
+# Arquivos locais — nunca commitar
+*.local
+wireguard-configs/
+__pycache__/
+*.pyc
+

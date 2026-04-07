@@ -11,10 +11,7 @@
 [pull]
   rebase=true
 
-[user]
-	name = Luiz Augusto Machado
-	email = luizmachado.to@gmail.com
 [color]
 	ui = auto
-[credential]
-	helper = store
+[include]
+	path = ~/.gitconfig.local

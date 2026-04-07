@@ -392,38 +392,30 @@ clear () {
 }
 
 convert_for_youtube() {
-  local input="" output="" with_song=false
-  local song="/Users/luizotavio/Library/CloudStorage/GoogleDrive-todoespacoonline@gmail.com/Meu Drive/BKP_EXTERNO_2/Edicao/youtube_library_music/lofi/todas-30db.mp3"
+  local input="" output=""
 
   while [[ $# -gt 0 ]]; do
     case "$1" in
       -i|--input)  input="${2:?"$1 requires a value"}"; shift 2 ;;
       -o|--output) output="${2:?"$1 requires a value"}"; shift 2 ;;
-      -s|--song)   with_song=true; shift ;;
       -h|--help)
-        echo "Usage: convert_for_youtube -i <input> -o <output> [-s]"
+        echo "Usage: convert_for_youtube -i <input> [-o <output>]"
         return 0 ;;
       *) echo "Unknown: $1" >&2; return 1 ;;
     esac
   done
 
-  [[ -z "$input" ]]  && echo "Missing -i <input>" >&2  && return 1
-  [[ -z "$output" ]] && echo "Missing -o <output>" >&2 && return 1
+  [[ -z "$input" ]] && echo "Missing -i <input>" >&2 && return 1
   [[ "$input" == "$output" ]] && echo "Input = output" >&2 && return 1
+
+  if [[ -z "$output" ]]; then
+    mkdir -p "${HOME}/Videos"
+    output="${HOME}/Videos/$(basename "${input%.*}").mp4"
+  fi
 
   local -a cmd=(
     ffmpeg -fflags +genpts+igndts
     -i "$input"
-  )
-
-  if $with_song; then
-    cmd+=( -i "$song"
-      -filter_complex "[0:a][1:a]amix=inputs=2:duration=first:normalize=0[a]"
-      -map 0:v -map "[a]"
-    )
-  fi
-
-  cmd+=(
     -c:v h264_videotoolbox -profile:v high -q:v 30
     -pix_fmt yuv420p
     -c:a aac -ar 48000 -b:a 192k
@@ -496,26 +488,3 @@ startgui() {
   sudo systemctl start sddm
 }
 
-commit_dotfiles() {
-  MSG="${1:-}"
-  CURDIR="$(pwd)"
-
-  if [[ -z $MSG ]]; then
-    echo "Action Cancelled"
-    return 0
-  fi
-
-  cd "${HOME}/dotfiles" || return 1
-
-  git add .
-  git commit -m "${MSG}"
-  git push
-  ssh maclo 'cd ~/dotfiles ; git pull'
-  ssh fedoraair 'cd ~/dotfiles ; git pull'
-  # shellcheck disable=SC1090
-  #
-  source ~/.zshrc
-  tmux source ~/.tmux.conf ; fc -W
-
-  cd "${CURDIR}" || return 1
-}

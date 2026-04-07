@@ -1,6 +1,7 @@
 #!/usr/bin/env python3.14
 
 # ruff: noqa: S607,S602
+import os
 import subprocess
 import sys
 import time
@@ -89,9 +90,11 @@ def merge_and_overwrite_histories(
     source {Path.home() / ".zshrc"}
     fc -W
     """
-    ssh_cp_zsh_history_cmd = """
-    ssh maclo 'cat .zsh_history'
-    """
+    sync_host = os.environ.get("DOTFILES_HISTORY_SYNC_HOST", "")
+    if not sync_host:
+        print("DOTFILES_HISTORY_SYNC_HOST não definido, pulando sync remoto.")
+        return
+    ssh_cp_zsh_history_cmd = f"ssh {sync_host} 'cat .zsh_history'"
     subprocess.run(["fc", "-W"], check=False, shell=True)
     subprocess.run(
         ["-l", "-c", zsh_source_cmds],
