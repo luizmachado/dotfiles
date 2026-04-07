@@ -85,6 +85,7 @@ Para instalar: `<prefix> I`. Para atualizar: `<prefix> U`.
 | `allow-rename` | off | Não renomeia janelas automaticamente |
 | `mouse` | off | Mouse desabilitado |
 | `mode-keys` | vi | Vi mode no copy-mode |
+| `default-shell` | `/bin/zsh` | Shell padrão para todos os panes |
 | `@continuum-save-interval` | 5 | Salva sessão a cada 5 minutos |
 
 ---

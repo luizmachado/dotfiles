@@ -172,6 +172,48 @@ O que o prompt exibe, da esquerda para a direita:
 | `OLLAMA_HOST` | `127.0.0.1:11434` | Servidor LLM local |
 | `KEYTIMEOUT` | `30` | Timeout de tecla no vi mode (ms) |
 | `BAT_STYLE` | `header` | Estilo padrão do `bat` |
+| `PYENV_ROOT` | `~/.pyenv` | Raiz da instalação do pyenv |
+
+---
+
+## pyenv e virtualenvs
+
+Gerenciamento de versões Python via pyenv + pyenv-virtualenv com autoativação.
+
+### Inicialização (config/exports)
+
+```bash
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
+```
+
+O `pyenv virtualenv-init` injeta `_pyenv_virtualenv_hook` em `precmd_functions` do zsh, que roda antes de cada prompt. Isso garante autoativação em terminais normais e em novos panes/janelas do tmux (sem nenhuma configuração extra no tmux).
+
+### Fluxo por projeto
+
+```bash
+# 1. Criar o virtualenv
+pyenv virtualenv 3.13.5 meu-projeto-env
+
+# 2. Associar ao diretório (cria .python-version)
+cd ~/projetos/meu-projeto
+pyenv local meu-projeto-env
+
+# 3. Instalar dependências
+pip install -r requirements.txt
+```
+
+A partir daí, entrar no diretório ativa o virtualenv automaticamente. O `.python-version` deve ser commitado no repositório para garantir consistência entre máquinas.
+
+### Como funciona em cada contexto
+
+| Contexto | Comportamento |
+|---|---|
+| Terminal normal | Ativa ao entrar no diretório (`cd`) |
+| Novo pane/janela tmux | Ativa no primeiro prompt (via `precmd_functions`) |
+| Popup Python REPL (`<prefix> C-p`) | Resolve via pyenv shims (sem ativação explícita, mas Python correto) |
+| Nvim terminal buffer | Herda o shell — ativa normalmente |
+| Nvim LSP | Detectado por `venv-selector.nvim` (ver docs do nvim) |
 
 ---
 

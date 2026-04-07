@@ -11,6 +11,7 @@ Configuração baseada no [LazyVim](https://lazyvim.org). Leader: `<Space>`. Loc
 | `yanky` | Histórico de yanks com ring de clipboard |
 | `dial` | Incrementa/decrementa números, datas e valores especiais |
 | `json` | LSP, schema validation e Treesitter para JSON/JSON5/JSONC |
+| `python` | LSP (basedpyright), DAP (debugpy), ruff, Treesitter python+toml |
 | `mini-hipatterns` | Destaca cores hex e classes Tailwind inline |
 
 ---
@@ -44,6 +45,15 @@ Configuração baseada no [LazyVim](https://lazyvim.org). Leader: `<Space>`. Loc
 | `<leader>/` | n | Grep (root) |
 | `<leader>fg` | n | Live grep |
 | `<leader>f*` | n | Grep pela palavra sob o cursor |
+
+### Python e virtualenv
+
+| Atalho | Modo | Ação |
+|---|---|---|
+| `<leader>cv` | n | Selecionar virtualenv (venv-selector) |
+| `<leader>cV` | n | Selecionar virtualenv do cache |
+
+Ao abrir um arquivo `.py`, o plugin verifica se existe `.python-version` no projeto e reconfigura o LSP automaticamente. Utiliza virtualenvs do pyenv em `~/.pyenv/versions`.
 
 ### LSP e código
 
@@ -131,6 +141,7 @@ Configuração baseada no [LazyVim](https://lazyvim.org). Leader: `<Space>`. Loc
 
 | Plugin | Propósito |
 |---|---|
+| venv-selector.nvim | Detecção e seleção de virtualenv pyenv para o LSP |
 | blink.cmp | Engine de completion com integração LSP |
 | bufferline.nvim | Tabs de buffers na parte superior |
 | lualine.nvim | Status bar inferior |
@@ -169,6 +180,9 @@ Instalados e gerenciados automaticamente via Mason.
 |---|---|---|
 | `lua_ls` | LSP | Lua |
 | `jsonls` | LSP | JSON/JSONC |
+| `basedpyright` | LSP | Python |
+| `ruff` | Formatador/Linter | Python |
+| `debugpy` | DAP | Python |
 | `stylua` | Formatador | Lua |
 | `shfmt` | Formatador | Shell |
 | `shellcheck` | Linter | Shell |
