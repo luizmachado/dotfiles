@@ -292,6 +292,31 @@ ln -sf "$HOME/dotfiles/nvim" "$HOME/.config/nvim"
 rm -Rf "$HOME/.config/ghostty"
 ln -sf "$HOME/dotfiles/ghostty" "$HOME/.config/ghostty"
 
+# i3wm keybindings (via include — NÃO substitui o config principal do usuário)
+if command -v i3 &>/dev/null; then
+    loginfo "Configurando keybindings do i3wm..."
+    mkdir -p "$HOME/.config/i3"
+
+    rm -f "$HOME/.config/i3/luiz_dotfiles.conf"
+    ln -sf "$HOME/dotfiles/i3/luiz.conf" "$HOME/.config/i3/luiz_dotfiles.conf"
+
+    I3_CONFIG="$HOME/.config/i3/config"
+    if [[ -f "$I3_CONFIG" ]]; then
+        if ! grep -qF "include ~/.config/i3/luiz_dotfiles.conf" "$I3_CONFIG"; then
+            printf '\ninclude ~/.config/i3/luiz_dotfiles.conf\n' >> "$I3_CONFIG"
+            logsuccess "Diretiva include adicionada ao ~/.config/i3/config"
+        else
+            loginfo "Diretiva include já presente no ~/.config/i3/config, pulando."
+        fi
+    else
+        logwarning "~/.config/i3/config não encontrado. Adicione manualmente: include ~/.config/i3/luiz_dotfiles.conf"
+    fi
+
+    logsuccess "Keybindings do i3wm configurados."
+else
+    loginfo "i3wm não encontrado, pulando configuração de keybindings."
+fi
+
 echo -e "
 [1;33mATENÇÃO: Passos manuais necessários:[0m"
 echo ""
