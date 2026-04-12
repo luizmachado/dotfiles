@@ -71,47 +71,25 @@ if [ "$(uname -s)" == "Linux" ]; then
 		# shellcheck disable=SC1091
 		. /etc/os-release
 		if [ "$ID" == "ubuntu" ] || [ "$ID" == "debian" ]; then
-			OP_SYSTEM="ubuntu" # aqui é ubuntu
+			OP_SYSTEM="ubuntu" # ubuntu ou debian
 		else
 			# Aqui não sei qual sistema é, mas é Linux
 			logerror "This is another Linux distribution: $PRETTY_NAME"
 		fi
 	elif command -v lsb_release &>/dev/null; then
-		if lsb_release -d | grep -q "Ubuntu"; then
-			OP_SYSTEM="ubuntu" # aqui também é ubuntu
+		if lsb_release -d | grep -qE "Ubuntu|Debian"; then
+			OP_SYSTEM="ubuntu" # ubuntu ou debian
 		fi
 	fi
-elif [ "$(uname -s)" == "Darwin" ]; then
-	OP_SYSTEM="darwin" # Aqui é MacOS
 else
-	# Eu não vou rodar se não for MacOS ou Ubuntu
 	logerror "It is not safe to run this script on your system."
 	exit 1
 fi
 
-if [[ "$OP_SYSTEM" == "darwin" ]]; then
-	# No mac os, vamos usar o homebrew
+if [[ "$OP_SYSTEM" == "ubuntu" ]]; then
 
-	# Homebrew e Brewfile
-	loginfo "Verificando e instalando dependências com Homebrew..."
-	if ! command -v brew &>/dev/null; then
-		loginfo "Homebrew não encontrado. Instalando..."
-		/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-		eval "$(/opt/homebrew/bin/brew shellenv)"
-	else
-		loginfo "Homebrew já está instalado. Atualizando..."
-		brew update
-	fi
-
-	# Para gerar o Brewfile
-	# brew bundle dump --file=~/dotfiles/homebrew/Brewfile --describe --force
-	loginfo "Instalando pacotes e aplicações do Brewfile..."
-	brew bundle --file="$HOME/dotfiles/homebrew/Brewfile"
-
-elif [[ "$OP_SYSTEM" == "ubuntu" ]]; then
-
-	# Aqui é Ubuntu, então apt nos pacotes
-	loginfo "Your system is Ubuntu, updating packages..."
+	# Ubuntu ou Debian, usamos apt
+	loginfo "Your system is Ubuntu/Debian, updating packages..."
 	sudo apt update -y
 	sudo apt upgrade -y
 
@@ -131,13 +109,13 @@ elif [[ "$OP_SYSTEM" == "ubuntu" ]]; then
 		tree watch wget fonts-firacode fonts-jetbrains-mono vim \
 		-y
 
-	sudo apt install lua5.4 liblua5.4-dev unzip make build-essential luarocks ripgrep tree-sitter-cli
+	sudo apt install lua5.4 liblua5.4-dev unzip make build-essential luarocks ripgrep
 	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 	eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 	brew install gcc
 
 	# Infelizmente vamos ter que buildar o neovim do zero
-	# não achei uma versão recente para Ubuntu
+	# os repositórios do Ubuntu/Debian não têm versão recente
 	if ! command -v nvim &>/dev/null; then
 		loginfo "Compiling and Installing nvim..."
 		git clone https://github.com/neovim/neovim.git ~/neovim
@@ -159,7 +137,7 @@ elif [[ "$OP_SYSTEM" == "ubuntu" ]]; then
 		sudo apt install zsh -y
 		chsh -s $(which zsh)
 	else
-		loginfo "nvim já instalado..."
+		loginfo "zsh já instalado..."
 	fi
 
 	loginfo "Installing Ghostty..."

@@ -7,7 +7,6 @@
   bare = false
   logallrefupdates = true
   ignorecase = true
-  precomposeunicode = true
 [pull]
   rebase=true
 

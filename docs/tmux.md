@@ -27,7 +27,7 @@ Prefix padrão: `Ctrl+b`.
 | `y` | Copiar seleção para clipboard |
 | `Enter` | Copiar e sair do copy mode |
 
-Clipboard: `pbcopy` no macOS, OSC 52 no Linux/SSH.
+Clipboard: OSC 52 (funciona local, Docker e SSH).
 
 ---
 

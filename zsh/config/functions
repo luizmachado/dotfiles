@@ -77,11 +77,6 @@ deletePythonCache() {
 
 
 
-iterm() {
-    cwd=$(pwd)
-    open -a iterm "$cwd"
-}
-
 restart_terminal() {
   fc -W
   # shellcheck source=../.zshrc
@@ -368,9 +363,6 @@ updateall() {
   omz update
   log "Running brew cleanup"
   brew cleanup
-
-  log "Regenerating brew bundle file"
-  brew bundle dump --file="${HOME}/dotfiles/homebrew/Brewfile" --force --no-restart
 
   log "Running uv self update"
   uv self update

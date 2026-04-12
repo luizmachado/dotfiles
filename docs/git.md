@@ -12,5 +12,4 @@ Configuração em `git/.gitconfig`.
 | `core` | `editor` | `nvim` | Editor para mensagens de commit |
 | `core` | `filemode` | `true` | Rastreia mudanças no bit de execução |
 | `core` | `ignorecase` | `true` | Nomes de arquivo case-insensitive |
-| `core` | `precomposeunicode` | `true` | Compatibilidade com nomes Unicode no macOS |
 | `pull` | `rebase` | `true` | Pull com rebase (histórico linear) |

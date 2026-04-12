@@ -4,7 +4,7 @@
 
 Referência detalhada de atalhos e recursos de cada ferramenta em [`docs/`](docs/index.md).
 
-Fiz os testes no Ubuntu 24.04 e no macOS Sequoia (ARM). Todos os testes foram
+Fiz os testes no Ubuntu 24.04 e Debian 12. Todos os testes foram
 feitos com uma instalação limpa dos sistemas operacionais.
 
 Mesmo assim, recomendo que você abra o arquivo `install.sh` e execute os
@@ -80,7 +80,7 @@ Configuração modular carregada pelo `.zshrc`. Os arquivos ficam em `zsh/config
 - `gitlog` — log bonito no terminal
 - `killcode`, `killchrome`, `killnode`, `killpython`, `killffmpeg` — mata processos
 - `nano` → `nvim`
-- `brewupdate`, `updateall` — atualiza tudo de uma vez
+- `updateall` — atualiza tudo de uma vez
 - `makenote` — abre nvim em janela flutuante do tmux para anotações
 - `tre` — tree ignorando `node_modules`, `.git`, `__pycache__`
 - `j` → `just`, `zs` → `source ~/.zshrc`
@@ -114,7 +114,7 @@ Configuração modular carregada pelo `.zshrc`. Os arquivos ficam em `zsh/config
 - Numeração de janelas começa em 1
 - Histórico de 30.000 linhas
 - Auto-renumeração de janelas
-- Clipboard: `pbcopy` no macOS, OSC 52 no Linux
+- Clipboard: OSC 52 (funciona local, Docker e SSH)
 
 **Keybindings customizados (`prefix` = `Ctrl+b`):**
 
@@ -156,30 +156,6 @@ Configuração em `git/.gitconfig`:
 - Editor: `nvim`
 - Pull com rebase por padrão
 - `ignorecase = true`, `filemode = true`
-
----
-
-### Homebrew (`homebrew/Brewfile`)
-
-Instalação completa com:
-
-- **CLI**: fzf, ripgrep, fd, bat, tree, htop, btop, watch, gh, just, shellcheck
-- **Editores**: neovim, vim
-- **Mídia**: ffmpeg, auto-editor, sox, vhs
-- **Build**: cmake, ninja-build, pkgconf, automake
-- **Rede**: wrk
-- **LLM local**: ollama
-- **Compressão**: p7zip, unzip
-- **macOS (casks)**: Ghostty, Docker Desktop, VS Code, Alfred, alt-tab, OBS, CapCut, VLC, AltDente, Keycastr
-
-**Extensões VS Code instaladas:**
-- ruff, ESLint, Prettier, shellcheck, shell-format, Even Better TOML
-- Python, Pylance, Debugpy
-- Tailwind CSS, IntelliCode, EditorConfig
-- Code Spell Checker (EN + PT-BR)
-
-**Ferramentas Python via `uv`:**
-- mypy, pyright, ruff, langgraph-cli
 
 ---
 

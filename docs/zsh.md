@@ -9,8 +9,8 @@ Configuração modular carregada pelo `.zshrc`. Os módulos ficam em `zsh/config
 | Arquivo | Responsabilidade |
 |---|---|
 | `.zshrc` | Carrega todos os módulos |
-| `.zshenv` | PATH para Homebrew (macOS e Linux) |
-| `.zprofile` | Inicialização do ambiente Homebrew |
+| `.zshenv` | Variáveis de ambiente básicas |
+| `.zprofile` | Inicialização do ambiente de login |
 | `config/config` | Opções do shell, histórico, plugins |
 | `config/exports` | Variáveis de ambiente |
 | `config/aliases` | Aliases |
@@ -53,10 +53,7 @@ Habilitado com `bindkey -v`.
 | `killffmpeg` | `pkill -f ffmpeg` | Mata processos ffmpeg |
 | `killadobe` | `pkill -f Adobe` | Mata todos os processos Adobe |
 | `nano` | `nvim` | Redireciona nano para nvim |
-| `brewupdate` | update + upgrade + omz update + cleanup + Brewfile | Atualização completa do Homebrew |
-| `cleanmacos` | purge + flush DNS + clear logs + empty trash | Limpeza do macOS |
 | `zs` | `source ~/.zshrc` | Recarrega a configuração do shell |
-| `brewcheck` | `brew leaves \| sort` | Lista pacotes Homebrew top-level |
 | `tre` | `tree` ignorando .git, node_modules, __pycache__, .venv, dist | Tree limpo |
 | `j` | `just` | Atalho para o task runner just |
 | `makenote` | `tmux new-window ...make_note.sh` | Abre nota rápida no tmux |
@@ -99,7 +96,6 @@ Habilitado com `bindkey -v`.
 | `deletePythonCache` | Remove `__pycache__`, `.pytest_cache`, `.tox`, `*.egg-info`, `build`, `dist`, `.pyc`, `.pyo` | `deletePythonCache` |
 | `show_colors` | Exibe todas as 256 cores do terminal com seus códigos | `show_colors` |
 | `gitconfig name email` | Configura git interativamente (nome, email, autocrlf, eol) | `gitconfig "Luiz" "email@..."` |
-| `iterm` | Abre o diretório atual no iTerm2 (macOS) | `iterm` |
 | `help [command]` | Ajuda de builtins bash (zsh não tem help nativo) | `help cd` |
 | `backup_ssh` | Faz backup criptografado (7z) do diretório .ssh no Desktop | `backup_ssh` |
 | `killgui` | Para a interface gráfica (sddm + wayland) | `killgui` |
@@ -119,7 +115,7 @@ Habilitado com `bindkey -v`.
 
 | Função | Descrição |
 |---|---|
-| `updateall` | Atualiza tudo: Homebrew, Oh-My-Zsh, npm, pyenv, uv tools, histórico |
+| `updateall` | Atualiza tudo: Oh-My-Zsh, npm, uv tools, histórico |
 | `cleanNeovimLogs` | Remove logs e cache do Neovim |
 | `restart_terminal` | Salva histórico, recarrega .zshrc e resincroniza tmux |
 
