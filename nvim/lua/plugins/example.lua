@@ -136,6 +136,12 @@ return {
         "yaml",
       },
     },
+    config = function(_, opts)
+      -- Força gcc/clang como compiladores para evitar problemas com versões
+      -- antigas do tree-sitter-cli (ex: instaladas via apt no Ubuntu)
+      require("nvim-treesitter.install").compilers = { "gcc", "clang", "cc" }
+      require("nvim-treesitter.configs").setup(opts)
+    end,
   },
 
   -- since `vim.tbl_deep_extend`, can only merge tables and not lists, the code above
