@@ -371,6 +371,9 @@ updateall() {
   log "Running uv python upgrade"
   uv python upgrade
 
+  log "Atualizando fabric..."
+  go install github.com/danielmiessler/fabric@latest
+
   log "Running npm upgrade for global packages: gemini npm prettier pyright"
   npm -g upgrade @google/gemini-cli npm prettier pyright
 

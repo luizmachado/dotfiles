@@ -72,4 +72,8 @@ PATH="$HOME/.antigravity/antigravity/bin:$PATH"
 
 PATH="$PATH:/opt/nvim/"
 
+# Go
+export GOPATH="${HOME}/go"
+PATH="${GOPATH}/bin:${PATH}"
+
 export PATH

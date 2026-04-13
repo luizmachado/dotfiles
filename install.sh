@@ -109,10 +109,17 @@ if [[ "$OP_SYSTEM" == "ubuntu" ]]; then
 		tree watch wget fonts-firacode fonts-jetbrains-mono vim \
 		-y
 
-	sudo apt install lua5.4 liblua5.4-dev unzip make build-essential luarocks ripgrep
+	sudo apt install lua5.4 liblua5.4-dev unzip make build-essential luarocks ripgrep xclip
 	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 	eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 	brew install gcc
+
+	if ! command -v go &>/dev/null; then
+		loginfo "Installing Go..."
+		brew install go
+	else
+		loginfo "Go já instalado..."
+	fi
 
 	# Infelizmente vamos ter que buildar o neovim do zero
 	# os repositórios do Ubuntu/Debian não têm versão recente
@@ -200,6 +207,13 @@ else
 	loginfo "UV já instalado..."
 fi
 
+if ! command -v fabric &>/dev/null; then
+	loginfo "Installing fabric..."
+	go install github.com/danielmiessler/fabric@latest
+else
+	loginfo "fabric já instalado..."
+fi
+
 if ! command -v nvm &>/dev/null; then
 	# NVM
 	rm -Rf "${HOME}/.nvm"
@@ -221,6 +235,8 @@ echo "5. Execute 'pyenv install 3.13.5' (ou versões mais novas)"
 echo "6. Execute 'pyenv global 3.13.5' (ou versões mais novas)"
 echo "7. Execute 'uv tool install pyright'"
 echo "8. Execute 'uv tool install ruff'"
+echo "9. Execute 'fabric --setup' e selecione Ollama como provedor"
+echo "   (o endpoint já está em OLLAMA_HOST; modelo padrão configurado: gemma4)"
 echo ""
 echo "Para criar um virtualenv por projeto:"
 echo "  pyenv virtualenv 3.13.5 meu-projeto-env"
@@ -270,6 +286,17 @@ ln -sf "$HOME/dotfiles/nvim" "$HOME/.config/nvim"
 # Ghostty
 rm -Rf "$HOME/.config/ghostty"
 ln -sf "$HOME/dotfiles/ghostty" "$HOME/.config/ghostty"
+
+# fabric — patterns customizados
+loginfo "Configurando padrões customizados do fabric..."
+mkdir -p "$HOME/.config/fabric/patterns"
+for pattern_dir in "$HOME/dotfiles/fabric/patterns"/*/; do
+    pattern_name=$(basename "$pattern_dir")
+    rm -Rf "$HOME/.config/fabric/patterns/$pattern_name"
+    ln -sf "$HOME/dotfiles/fabric/patterns/$pattern_name" \
+           "$HOME/.config/fabric/patterns/$pattern_name"
+done
+logsuccess "Padrões fabric configurados: cria_commit, corrige_pt"
 
 # i3wm keybindings (via include — NÃO substitui o config principal do usuário)
 if command -v i3 &>/dev/null; then

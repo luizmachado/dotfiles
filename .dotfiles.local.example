@@ -10,6 +10,11 @@ export DOTFILES_GIT_EMAIL="voce@exemplo.com"
 # ── Esta máquina ──────────────────────────────────────────────────────────────
 export DOTFILES_HOSTNAME="$(hostname -s)"
 
+# ── fabric (LLM CLI via Ollama) ───────────────────────────────────────────────
+# Configurar via: fabric --setup (selecione Ollama e informe o modelo)
+export FABRIC_DEFAULT_VENDOR="ollama"
+export FABRIC_DEFAULT_MODEL="gemma4"
+
 # ── Sync de histórico zsh ─────────────────────────────────────────────────────
 # Host SSH para buscar histórico remoto (zsh_history_sync.py).
 # Deixar vazio para desabilitar o sync remoto.
