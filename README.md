@@ -175,14 +175,31 @@ memória, disco, bateria e paleta de cores.
 
 ## Pós-instalação (passos manuais)
 
-Após rodar o `install.sh`, ainda é necessário:
+Após rodar o `install.sh`, o próprio script irá pausar e pedir que esses comandos sejam executados em um novo terminal:
+
+**Node (via nvm):**
+
+```bash
+nvm install --lts
+nvm install-latest-npm
+npm i -g prettier
+npm i -g tree-sitter-cli   # necessário para o nvim-treesitter compilar parsers
+```
+
+**Python (via pyenv + uv):**
+
+```bash
+pyenv install 3.13.5       # ou versão mais recente
+pyenv global 3.13.5
+uv tool install pyright
+uv tool install ruff
+```
+
+**Depois de voltar ao script:**
 
 1. Abrir o Neovim e aguardar o Lazy.nvim instalar os plugins
 2. No tmux: `prefix + I` para instalar os plugins do TPM
-3. Instalar versão do Python via pyenv: `pyenv install <versão>`
-4. Instalar ferramentas Python via uv: `uv tool install ruff mypy pyright`
-5. Instalar Prettier globalmente: `npm install -g prettier`
-6. Reiniciar o terminal
+3. Reiniciar o terminal
 
 ---
 
