@@ -372,7 +372,7 @@ if command -v i3 &>/dev/null; then
     # ── patch: substitui dmenu por rofi no binding $mod+d ────────────────────
     if [[ -f "$I3_CONFIG" ]] && grep -q "dmenu_run" "$I3_CONFIG"; then
         sed -i \
-            's|bindsym \$mod+d exec --no-startup-id dmenu_run|bindsym $mod+d exec --no-startup-id rofi -modi drun,run -show drun|' \
+            's|bindsym \$mod+d exec --no-startup-id dmenu_run|bindsym $mod+d exec --no-startup-id rofi -show drun|' \
             "$I3_CONFIG"
         logsuccess "dmenu substituído por rofi no binding \$mod+d"
     else
