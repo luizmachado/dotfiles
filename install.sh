@@ -327,28 +327,23 @@ if command -v i3 &>/dev/null; then
     rm -f "$HOME/.config/i3/luiz_dotfiles.conf"
     ln -sf "$HOME/dotfiles/i3/luiz.conf" "$HOME/.config/i3/luiz_dotfiles.conf"
 
-    if [[ -f "$I3_CONFIG" ]]; then
-        if ! grep -qF "include ~/.config/i3/luiz_dotfiles.conf" "$I3_CONFIG"; then
-            printf '\ninclude ~/.config/i3/luiz_dotfiles.conf\n' >> "$I3_CONFIG"
-            logsuccess "include luiz_dotfiles.conf adicionado ao ~/.config/i3/config"
-        else
-            loginfo "include luiz_dotfiles.conf já presente, pulando."
-        fi
-    else
-        logwarning "~/.config/i3/config não encontrado — adicione manualmente: include ~/.config/i3/luiz_dotfiles.conf"
-    fi
-
     # ── tema Tokyo Night (font, cores, bordas, gaps, picom) ───────────────────
     rm -f "$HOME/.config/i3/theme.conf"
     ln -sf "$HOME/dotfiles/i3/theme.conf" "$HOME/.config/i3/theme.conf"
 
+    # ── injeta includes no config principal (idempotente: remove e re-adiciona) ─
+    # Abordagem "remove + re-add" evita duplicatas mesmo se o script rodar
+    # múltiplas vezes ou se o include foi escrito com caminho absoluto antes.
     if [[ -f "$I3_CONFIG" ]]; then
-        if ! grep -qF "include ~/.config/i3/theme.conf" "$I3_CONFIG"; then
-            printf '\ninclude ~/.config/i3/theme.conf\n' >> "$I3_CONFIG"
-            logsuccess "include theme.conf adicionado ao ~/.config/i3/config"
-        else
-            loginfo "include theme.conf já presente, pulando."
-        fi
+        sed -i '/include.*luiz_dotfiles\.conf/d' "$I3_CONFIG"
+        sed -i '/include.*theme\.conf/d' "$I3_CONFIG"
+        printf '\ninclude ~/.config/i3/luiz_dotfiles.conf\n' >> "$I3_CONFIG"
+        printf '\ninclude ~/.config/i3/theme.conf\n' >> "$I3_CONFIG"
+        logsuccess "includes luiz_dotfiles.conf e theme.conf configurados em ~/.config/i3/config"
+    else
+        logwarning "~/.config/i3/config não encontrado. Adicione manualmente:"
+        logwarning "  include ~/.config/i3/luiz_dotfiles.conf"
+        logwarning "  include ~/.config/i3/theme.conf"
     fi
 
     # ── i3status: config customizado (lido automaticamente pelo i3status) ─────
