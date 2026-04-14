@@ -227,7 +227,7 @@ fi
 
 if ! command -v fabric &>/dev/null; then
 	loginfo "Installing fabric..."
-	go install github.com/danielmiessler/fabric@latest
+	go install github.com/danielmiessler/fabric/cmd/fabric@latest
 else
 	loginfo "fabric já instalado..."
 fi
