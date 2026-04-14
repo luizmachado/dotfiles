@@ -369,14 +369,17 @@ if command -v i3 &>/dev/null; then
         loginfo "Cores da barra já configuradas ou config não encontrado, pulando patch."
     fi
 
-    # ── patch: substitui dmenu por rofi no binding $mod+d ────────────────────
-    if [[ -f "$I3_CONFIG" ]] && grep -q "dmenu_run" "$I3_CONFIG"; then
+    # ── patch: garante que $mod+d usa 'rofi -show drun' (sem vírgulas) ─────────
+    # Cobre todos os casos: dmenu_run, rofi com -modi antigo, ou qualquer outro.
+    # O i3 interpreta vírgulas como separador de comandos no parser IPC,
+    # portanto '-modi drun,run' causa parse error — sempre usar 'rofi -show drun'.
+    if [[ -f "$I3_CONFIG" ]] && grep -q "bindsym \$mod+d exec --no-startup-id" "$I3_CONFIG"; then
         sed -i \
-            's|bindsym \$mod+d exec --no-startup-id dmenu_run|bindsym $mod+d exec --no-startup-id rofi -show drun|' \
+            's|bindsym \$mod+d exec --no-startup-id.*|bindsym $mod+d exec --no-startup-id rofi -show drun|' \
             "$I3_CONFIG"
-        logsuccess "dmenu substituído por rofi no binding \$mod+d"
+        logsuccess "Binding \$mod+d configurado para rofi -show drun"
     else
-        loginfo "Binding \$mod+d já configurado ou config não encontrado, pulando."
+        loginfo "Binding \$mod+d não encontrado no config, pulando."
     fi
 
     logsuccess "i3wm configurado com tema Tokyo Night."
