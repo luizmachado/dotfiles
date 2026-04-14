@@ -4,6 +4,8 @@
 
 Referência detalhada de atalhos e recursos de cada ferramenta em [`docs/`](docs/index.md).
 
+Contexto para o Claude Code em [`CLAUDE.md`](CLAUDE.md).
+
 Fiz os testes no Ubuntu 24.04 e Debian 12. Todos os testes foram
 feitos com uma instalação limpa dos sistemas operacionais.
 
@@ -162,6 +164,45 @@ Configuração em `git/.gitconfig`:
 ### Scripts utilitários (`scripts/`)
 
 - **`zsh_history_sync.py`** — deduplica e sincroniza histórico do Zsh entre máquinas
+
+---
+
+### i3wm
+
+Ambiente de janelas tiling com tema Tokyo Night. Configuração via `include`
+— o config original gerado pelo wizard não é substituído.
+
+Documentação detalhada: [`docs/i3.md`](docs/i3.md)
+
+**Keybindings customizados:**
+
+| Atalho | Ação |
+|--------|------|
+| `$mod+d` | Rofi — launcher de aplicativos |
+| `$mod+p` | Move workspace para monitor da esquerda |
+| `$mod+Shift+p` | Captura de tela (Flameshot GUI) |
+| `$mod+Shift+d` | Desativa protetor de tela (modo apresentação) |
+| `$mod+Shift+a` | Reativa protetor de tela (5 min) |
+
+**Status bar** (i3status com Nerd Font): `󰻠 CPU` `󰍛 MEM` `󰋊 DSK` `󰈀 IP` `󰁹 BAT` `󰥔 dd/mm/yyyy HH:MM`
+
+---
+
+### Fabric
+
+Integração com o [fabric](https://github.com/danielmiessler/fabric) para
+pipelines LLM no terminal. Padrões customizados em `fabric/patterns/`.
+
+| Padrão | Descrição |
+|--------|-----------|
+| `cria_commit` | Gera mensagem de commit no padrão Conventional Commits em PT-BR |
+| `corrige_pt` | Corrige texto em português preservando o tom original |
+
+Uso:
+```bash
+git diff --staged | fabric -p cria_commit
+echo "texto com erros" | fabric -p corrige_pt
+```
 
 ---
 
