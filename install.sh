@@ -107,6 +107,7 @@ if [[ "$OP_SYSTEM" == "ubuntu" ]]; then
 		openssl bat cmake ffmpeg fzf htop nano \
 		p7zip pkgconf sqlite3 tcl tk tcl-dev tk-dev tmux \
 		tree watch wget fonts-firacode fonts-jetbrains-mono vim \
+		rofi picom fontconfig \
 		-y
 
 	sudo apt install lua5.4 liblua5.4-dev unzip make build-essential luarocks ripgrep xclip
@@ -149,6 +150,23 @@ if [[ "$OP_SYSTEM" == "ubuntu" ]]; then
 
 	loginfo "Installing Ghostty..."
 	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/mkasberg/ghostty-ubuntu/HEAD/install.sh)"
+
+	# JetBrainsMono Nerd Font — habilita ícones no i3bar, rofi e terminal
+	NERD_FONT_DIR="$HOME/.local/share/fonts/NerdFonts"
+	if ! fc-list | grep -qi "JetBrainsMono Nerd"; then
+		loginfo "Instalando JetBrainsMono Nerd Font..."
+		mkdir -p "$NERD_FONT_DIR"
+		_NF_TMP=$(mktemp -d)
+		curl -fsSL "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip" \
+			-o "$_NF_TMP/JetBrainsMono.zip"
+		unzip -q "$_NF_TMP/JetBrainsMono.zip" -d "$NERD_FONT_DIR"
+		rm -rf "$_NF_TMP"
+		fc-cache -f "$NERD_FONT_DIR"
+		logsuccess "JetBrainsMono Nerd Font instalada em $NERD_FONT_DIR"
+	else
+		loginfo "JetBrainsMono Nerd Font já instalada, pulando."
+	fi
+
 else
 	# Eu tenho medo de rodar isso noutro sistema que não testei
 	# Mas lendo aqui você pode fazer tudo manualmente
@@ -298,29 +316,67 @@ for pattern_dir in "$HOME/dotfiles/fabric/patterns"/*/; do
 done
 logsuccess "Padrões fabric configurados: cria_commit, corrige_pt"
 
-# i3wm keybindings (via include — NÃO substitui o config principal do usuário)
+# i3wm — tema e keybindings (via include — NÃO substitui o config principal do usuário)
 if command -v i3 &>/dev/null; then
-    loginfo "Configurando keybindings do i3wm..."
+    loginfo "Configurando i3wm (tema Tokyo Night + keybindings)..."
     mkdir -p "$HOME/.config/i3"
 
+    I3_CONFIG="$HOME/.config/i3/config"
+
+    # ── keybindings customizadas ──────────────────────────────────────────────
     rm -f "$HOME/.config/i3/luiz_dotfiles.conf"
     ln -sf "$HOME/dotfiles/i3/luiz.conf" "$HOME/.config/i3/luiz_dotfiles.conf"
 
-    I3_CONFIG="$HOME/.config/i3/config"
     if [[ -f "$I3_CONFIG" ]]; then
         if ! grep -qF "include ~/.config/i3/luiz_dotfiles.conf" "$I3_CONFIG"; then
             printf '\ninclude ~/.config/i3/luiz_dotfiles.conf\n' >> "$I3_CONFIG"
-            logsuccess "Diretiva include adicionada ao ~/.config/i3/config"
+            logsuccess "include luiz_dotfiles.conf adicionado ao ~/.config/i3/config"
         else
-            loginfo "Diretiva include já presente no ~/.config/i3/config, pulando."
+            loginfo "include luiz_dotfiles.conf já presente, pulando."
         fi
     else
-        logwarning "~/.config/i3/config não encontrado. Adicione manualmente: include ~/.config/i3/luiz_dotfiles.conf"
+        logwarning "~/.config/i3/config não encontrado — adicione manualmente: include ~/.config/i3/luiz_dotfiles.conf"
     fi
 
-    logsuccess "Keybindings do i3wm configurados."
+    # ── tema Tokyo Night (font, cores, bordas, gaps, picom) ───────────────────
+    rm -f "$HOME/.config/i3/theme.conf"
+    ln -sf "$HOME/dotfiles/i3/theme.conf" "$HOME/.config/i3/theme.conf"
+
+    if [[ -f "$I3_CONFIG" ]]; then
+        if ! grep -qF "include ~/.config/i3/theme.conf" "$I3_CONFIG"; then
+            printf '\ninclude ~/.config/i3/theme.conf\n' >> "$I3_CONFIG"
+            logsuccess "include theme.conf adicionado ao ~/.config/i3/config"
+        else
+            loginfo "include theme.conf já presente, pulando."
+        fi
+    fi
+
+    # ── i3status: config customizado (lido automaticamente pelo i3status) ─────
+    mkdir -p "$HOME/.config/i3status"
+    rm -f "$HOME/.config/i3status/config"
+    ln -sf "$HOME/dotfiles/i3/i3status.conf" "$HOME/.config/i3status/config"
+    logsuccess "i3status config symlinked para ~/.config/i3status/config"
+
+    # ── rofi: launcher moderno com tema Tokyo Night ───────────────────────────
+    mkdir -p "$HOME/.config/rofi"
+    rm -f "$HOME/.config/rofi/config.rasi"
+    ln -sf "$HOME/dotfiles/i3/rofi/config.rasi" "$HOME/.config/rofi/config.rasi"
+    logsuccess "Rofi config symlinked para ~/.config/rofi/config.rasi"
+
+    # ── patch cirúrgico: injeta cores Tokyo Night no bloco bar{} ─────────────
+    # Único toque no config principal — apenas aditivo, nada é removido.
+    if [[ -f "$I3_CONFIG" ]] && ! grep -q "background #1a1b26" "$I3_CONFIG"; then
+        sed -i \
+            's|status_command i3status|status_command i3status\n\tfont pango:JetBrainsMono Nerd Font 9\n\tcolors {\n\t\tbackground #1a1b26\n\t\tstatusline #c0caf5\n\t\tseparator  #3b4261\n\t\tfocused_workspace  #7aa2f7 #3d59a1 #c0caf5\n\t\tactive_workspace   #24283b #24283b #c0caf5\n\t\tinactive_workspace #1a1b26 #1a1b26 #565f89\n\t\turgent_workspace   #f7768e #f7768e #1a1b26\n\t}|' \
+            "$I3_CONFIG"
+        logsuccess "Cores Tokyo Night injetadas no bloco bar{} do ~/.config/i3/config"
+    else
+        loginfo "Cores da barra já configuradas ou config não encontrado, pulando patch."
+    fi
+
+    logsuccess "i3wm configurado com tema Tokyo Night."
 else
-    loginfo "i3wm não encontrado, pulando configuração de keybindings."
+    loginfo "i3wm não encontrado, pulando configuração."
 fi
 
 echo -e "
