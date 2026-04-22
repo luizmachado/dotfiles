@@ -55,7 +55,9 @@ Configuração baseada no [LazyVim](https://lazyvim.org). Leader: `<Space>`. Loc
 
 Ao abrir um arquivo `.py`, o plugin verifica se existe `.python-version` no projeto e reconfigura o LSP automaticamente. Utiliza virtualenvs do pyenv em `~/.pyenv/versions`.
 
-### REPL (iron.nvim)
+### REPL (iron.nvim + NotebookNavigator)
+
+Documentação completa: [`docs/repl.md`](repl.md)
 
 | Atalho | Modo | Ação |
 |---|---|---|
@@ -64,14 +66,28 @@ Ao abrir um arquivo `.py`, o plugin verifica se existe `.python-version` no proj
 | `<leader>rf` | n | Focar janela do REPL |
 | `<leader>rh` | n | Ocultar REPL |
 | `<leader>rl` | n | Enviar linha atual |
+| `<leader>rp` | n | Enviar parágrafo atual |
 | `<leader>rc` | n, v | Enviar motion / seleção visual |
 | `<leader>rF` | n | Enviar arquivo inteiro |
 | `<leader>ru` | n | Enviar até o cursor |
+| `<leader>rm` | v | Marcar seleção como região |
+| `<leader>rM` | n | Enviar região marcada |
+| `<leader>r<space>` | n | Interromper execução |
 | `<leader>rx` | n | Limpar REPL |
 | `<leader>rq` | n | Fechar REPL |
 
-O REPL é detectado automaticamente pelo `filetype` do buffer.
-Para Julia, requer `julia` no `$PATH`. Para Python, usa `python3`.
+#### Code Cells (`# %%`)
+
+| Atalho | Modo | Ação |
+|---|---|---|
+| `]c` | n | Próxima célula |
+| `[c` | n | Célula anterior |
+| `<leader>rn` | n | Executar célula atual |
+| `<leader>ra` | n | Executar células acima do cursor |
+| `<leader>rA` | n | Executar todas as células |
+
+O REPL é detectado automaticamente pelo `filetype`. Para Julia, usa
+`julia --startup-file=no --color=yes`. Para Python, usa `python3`.
 
 ### LSP e código
 
@@ -160,7 +176,8 @@ Para Julia, requer `julia` no `$PATH`. Para Python, usa `python3`.
 | Plugin | Propósito |
 |---|---|
 | venv-selector.nvim | Detecção e seleção de virtualenv pyenv para o LSP |
-| iron.nvim | REPL interativo para Python, Julia e outras linguagens |
+| iron.nvim | REPL interativo para Python, Julia, Lua e Shell |
+| NotebookNavigator.nvim | Navegação e execução de code cells `# %%` via iron |
 | blink.cmp | Engine de completion com integração LSP |
 | bufferline.nvim | Tabs de buffers na parte superior |
 | lualine.nvim | Status bar inferior |
