@@ -55,6 +55,24 @@ Configuração baseada no [LazyVim](https://lazyvim.org). Leader: `<Space>`. Loc
 
 Ao abrir um arquivo `.py`, o plugin verifica se existe `.python-version` no projeto e reconfigura o LSP automaticamente. Utiliza virtualenvs do pyenv em `~/.pyenv/versions`.
 
+### REPL (iron.nvim)
+
+| Atalho | Modo | Ação |
+|---|---|---|
+| `<leader>rs` | n | Abrir REPL (detecta filetype: python, julia…) |
+| `<leader>rr` | n | Reiniciar REPL |
+| `<leader>rf` | n | Focar janela do REPL |
+| `<leader>rh` | n | Ocultar REPL |
+| `<leader>rl` | n | Enviar linha atual |
+| `<leader>rc` | n, v | Enviar motion / seleção visual |
+| `<leader>rF` | n | Enviar arquivo inteiro |
+| `<leader>ru` | n | Enviar até o cursor |
+| `<leader>rx` | n | Limpar REPL |
+| `<leader>rq` | n | Fechar REPL |
+
+O REPL é detectado automaticamente pelo `filetype` do buffer.
+Para Julia, requer `julia` no `$PATH`. Para Python, usa `python3`.
+
 ### LSP e código
 
 | Atalho | Modo | Ação |
@@ -142,6 +160,7 @@ Ao abrir um arquivo `.py`, o plugin verifica se existe `.python-version` no proj
 | Plugin | Propósito |
 |---|---|
 | venv-selector.nvim | Detecção e seleção de virtualenv pyenv para o LSP |
+| iron.nvim | REPL interativo para Python, Julia e outras linguagens |
 | blink.cmp | Engine de completion com integração LSP |
 | bufferline.nvim | Tabs de buffers na parte superior |
 | lualine.nvim | Status bar inferior |

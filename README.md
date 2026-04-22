@@ -48,6 +48,7 @@ Configuração baseada no [LazyVim](https://lazyvim.org) com ajustes pessoais.
 - **Git**: gitsigns
 - **Formatação**: conform.nvim
 - **Linting**: nvim-lint
+- **REPL**: iron.nvim — envia linhas/seleções para Python/Julia com `<leader>r*`
 - **Sessão**: persistence.nvim
 - **Utilitários**: mini.ai, mini.pairs, mini.icons, plenary
 
