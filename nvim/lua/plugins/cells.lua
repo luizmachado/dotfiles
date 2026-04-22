@@ -6,7 +6,7 @@ return {
     "GCBallesteros/NotebookNavigator.nvim",
     dependencies = {
       "Vigemus/iron.nvim",
-      "echasnovski/mini.ai",
+      "nvim-mini/mini.ai",
     },
     keys = {
       { "]c",         function() require("notebook-navigator").move_cell("d") end,      desc = "Célula: próxima" },
