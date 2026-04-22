@@ -29,10 +29,7 @@ return {
           exit              = "<leader>rq",
           clear             = "<leader>rx",
         },
-        highlight = {
-          italic  = true,
-          timeout = 300,
-        },
+        highlight = { italic = true },
         ignore_blank_lines = true,
       })
 
