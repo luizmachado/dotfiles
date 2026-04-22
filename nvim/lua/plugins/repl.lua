@@ -3,29 +3,40 @@ return {
     "Vigemus/iron.nvim",
     config = function()
       local iron = require("iron.core")
+
       iron.setup({
         config = {
           scratch_repl = true,
           repl_definition = {
             python = { command = { "python3" } },
-            julia  = { command = { "julia" } },
+            julia  = { command = { "julia", "--startup-file=no", "--color=yes" } },
+            lua    = { command = { "lua" } },
+            sh     = { command = { "zsh" } },
           },
-          repl_open_cmd = require("iron.view").bottom(15),
+          repl_open_cmd = require("iron.view").right("40%"),
         },
         keymaps = {
           send_motion       = "<leader>rc",
           visual_send       = "<leader>rc",
           send_file         = "<leader>rF",
           send_line         = "<leader>rl",
+          send_paragraph    = "<leader>rp",
           send_until_cursor = "<leader>ru",
+          mark_visual       = "<leader>rm",
+          send_mark         = "<leader>rM",
           cr                = "<leader>r<cr>",
           interrupt         = "<leader>r<space>",
           exit              = "<leader>rq",
           clear             = "<leader>rx",
         },
-        highlight = { italic = true },
+        highlight = {
+          italic  = true,
+          timeout = 300,
+        },
         ignore_blank_lines = true,
       })
+
+      require("which-key").add({ { "<leader>r", group = "repl" } })
     end,
     keys = {
       { "<leader>rs", "<cmd>IronRepl<cr>",    desc = "REPL: abrir" },
