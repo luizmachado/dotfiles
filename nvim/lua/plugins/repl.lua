@@ -38,6 +38,7 @@ return {
 
       require("which-key").add({ { "<leader>r", group = "repl" } })
     end,
+    cmd = { "IronRepl", "IronRestart", "IronFocus", "IronHide" },
     keys = {
       { "<leader>rs", "<cmd>IronRepl<cr>",    desc = "REPL: abrir" },
       { "<leader>rr", "<cmd>IronRestart<cr>", desc = "REPL: reiniciar" },
