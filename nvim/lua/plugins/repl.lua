@@ -9,7 +9,6 @@ return {
           scratch_repl = true,
           repl_definition = {
             python = { command = { "python3" } },
-            julia  = { command = { "julia", "--startup-file=no", "--color=yes" } },
             lua    = { command = { "lua" } },
             sh     = { command = { "zsh" } },
           },
