@@ -387,6 +387,15 @@ else
     loginfo "i3wm não encontrado, pulando configuração."
 fi
 
+
+# --- Tema inicial ---
+loginfo "Configurando arquivos de tema inicial (dark)..."
+if [ ! -f "$HOME/.theme-mode" ]; then
+	echo "dark" > "$HOME/.theme-mode"
+fi
+cp "$HOME/dotfiles/tmux/theme-dark.conf" "$HOME/.tmux-theme.conf"
+cp "$HOME/dotfiles/ghostty/themes/dark.conf" "$HOME/.theme-active-ghostty.conf"
+logsuccess "Arquivos de tema inicial configurados (~/.tmux-theme.conf, ~/.theme-active-ghostty.conf)."
 echo -e "
 [1;33mATENÇÃO: Passos manuais necessários:[0m"
 echo ""

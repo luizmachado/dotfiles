@@ -11,4 +11,5 @@ Referência rápida de recursos, atalhos e configurações de cada ferramenta.
 | Git | [git.md](git.md) | Opções configuradas |
 | i3wm | [i3.md](i3.md) | Tema Tokyo Night, rofi, i3status, gaps |
 | REPL | [repl.md](repl.md) | iron.nvim, code cells, execução interativa Python/Julia |
+| Toggle de Tema | [theme-toggle.md](theme-toggle.md) | Sistema unificado escuro/claro (i3 + rofi + tmux + Ghostty + Neovim) |
 | Fabric | — | Padrões LLM em `fabric/patterns/` |

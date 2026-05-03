@@ -1,5 +1,6 @@
 # shellcheck disable=all
 theme = omtheme
+config-file = ~/.theme-active-ghostty.conf
 
 # Font 
 font-family = JetBrains Mono

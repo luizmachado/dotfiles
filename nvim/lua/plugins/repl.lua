@@ -1,3 +1,11 @@
+local repl_layout = "vertical"
+
+local function toggle_repl_layout()
+  repl_layout = repl_layout == "vertical" and "horizontal" or "vertical"
+  vim.cmd("IronHide")
+  vim.cmd("IronRepl")
+end
+
 return {
   {
     "Vigemus/iron.nvim",
@@ -12,7 +20,14 @@ return {
             lua    = { command = { "lua" } },
             sh     = { command = { "zsh" } },
           },
-          repl_open_cmd = require("iron.view").right("40%"),
+          repl_open_cmd = function()
+            local view = require("iron.view")
+            if repl_layout == "vertical" then
+              return view.right("40%")()
+            else
+              return view.bottom("40%")()
+            end
+          end,
         },
         keymaps = {
           send_motion       = "<leader>rc",
@@ -40,6 +55,7 @@ return {
       { "<leader>rr", "<cmd>IronRestart<cr>", desc = "REPL: reiniciar" },
       { "<leader>rf", "<cmd>IronFocus<cr>",   desc = "REPL: focar" },
       { "<leader>rh", "<cmd>IronHide<cr>",    desc = "REPL: ocultar" },
+      { "<leader>ro", toggle_repl_layout,     desc = "REPL: alternar layout" },
     },
   },
 }

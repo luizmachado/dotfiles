@@ -150,6 +150,7 @@ O REPL é detectado automaticamente pelo `filetype`. Para Julia, usa
 | `<leader>un` | n | Toggle número relativo |
 | `<leader>uo` | n | Toggle indent guides |
 | `<leader>uf` | n | Toggle autoformat |
+| `<leader>ut` | n | Toggle tema (escuro/claro) |
 | `<C-/>` | n | Toggle terminal |
 
 ### Sessão

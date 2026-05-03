@@ -26,6 +26,7 @@ determina qual REPL é iniciado automaticamente: Python → `python3`, Julia →
 | `<leader>rr` | Reiniciar REPL (preserva split) |
 | `<leader>rf` | Focar janela do REPL |
 | `<leader>rh` | Ocultar REPL (mantém sessão ativa) |
+| `<leader>ro` | Alternar layout: vertical (direita) ↔ horizontal (inferior) |
 | `<leader>r<space>` | Interromper execução em andamento (KeyboardInterrupt) |
 | `<leader>rx` | Limpar saída do REPL |
 | `<leader>rq` | Fechar REPL |
@@ -163,6 +164,7 @@ Com `mini.ai` (já instalado):
 | `<leader>rr` | n | REPL: reiniciar |
 | `<leader>rf` | n | REPL: focar |
 | `<leader>rh` | n | REPL: ocultar |
+| `<leader>ro` | n | REPL: alternar layout vertical/horizontal |
 | `<leader>rl` | n | Enviar linha atual |
 | `<leader>rp` | n | Enviar parágrafo atual |
 | `<leader>rc` | n, v | Enviar motion / seleção visual |
