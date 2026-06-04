@@ -483,3 +483,18 @@ startgui() {
   sudo systemctl start sddm
 }
 
+tmux_kill_others() {
+  local current_session
+  current_session=$(tmux display-message -p '#{session_name}')
+  loginfo "Killing all sessions except: $current_session"
+
+  for session in $(tmux list-sessions -F '#{session_name}'); do
+    if [[ "$session" != "$current_session" ]]; then
+      logwarning "Killing session: $session"
+      tmux kill-session -t "$session"
+    fi
+  done
+
+  logsuccess "Done!"
+}
+
