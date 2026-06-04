@@ -77,7 +77,8 @@ Nunca usar vírgulas em argumentos de `exec` no config (ex.: `-modi drun,run` ca
 ## Pacotes instalados pelo install.sh
 
 **apt:** git, build-essential, ripgrep, fzf, bat, tmux, zsh, tree, htop, ffmpeg,
-fonts-firacode, fonts-jetbrains-mono, rofi, picom, fontconfig, lua5.4, unzip, xclip
+fonts-firacode, fonts-jetbrains-mono, rofi, picom, fontconfig, lua5.4, unzip, xclip,
+texlive-latex-extra, texlive-fonts-recommended, texlive-lang-portuguese, latexmk, zathura, zathura-pdf-poppler
 
 **Homebrew:** gcc, go, neovim (compilado do source)
 

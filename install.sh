@@ -148,6 +148,15 @@ if [[ "$OP_SYSTEM" == "ubuntu" ]]; then
 		loginfo "zsh já instalado..."
 	fi
 
+	if ! command -v latexmk &>/dev/null; then
+		loginfo "Instalando ferramentas LaTeX..."
+		sudo apt install texlive-latex-extra texlive-fonts-recommended \
+			texlive-lang-portuguese latexmk zathura zathura-pdf-poppler -y
+		logsuccess "Ferramentas LaTeX instaladas."
+	else
+		loginfo "latexmk já instalado, pulando LaTeX..."
+	fi
+
 	loginfo "Installing Ghostty..."
 	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/mkasberg/ghostty-ubuntu/HEAD/install.sh)"
 

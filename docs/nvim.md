@@ -89,6 +89,21 @@ Documentação completa: [`docs/repl.md`](repl.md)
 O REPL é detectado automaticamente pelo `filetype`. Para Julia, usa
 `julia --startup-file=no --color=yes`. Para Python, usa `python3`.
 
+### LaTeX (vimtex)
+
+| Atalho | Modo | Ação |
+|---|---|---|
+| `\ll` | n | Compilar documento (toggle) |
+| `\lk` | n | Parar compilação |
+| `\lv` | n | Visualizar PDF / forward search |
+| `\lc` | n | Limpar arquivos auxiliares |
+| `\lC` | n | Limpar tudo (incluindo PDF) |
+| `\lt` | n | Tabela de conteúdo |
+| `\le` | n | Lista de erros |
+| `\lq` | n | Log do compilador |
+
+Forward search abre/foca o Zathura na linha atual. Reverse search: `Ctrl+clique` no Zathura volta ao cursor no Neovim.
+
 ### LSP e código
 
 | Atalho | Modo | Ação |
@@ -177,6 +192,7 @@ O REPL é detectado automaticamente pelo `filetype`. Para Julia, usa
 | Plugin | Propósito |
 |---|---|
 | venv-selector.nvim | Detecção e seleção de virtualenv pyenv para o LSP |
+| vimtex | Compilação LaTeX, visualização Zathura e navegação estrutural |
 | iron.nvim | REPL interativo para Python, Julia, Lua e Shell |
 | NotebookNavigator.nvim | Navegação e execução de code cells `# %%` via iron |
 | blink.cmp | Engine de completion com integração LSP |
@@ -218,6 +234,7 @@ Instalados e gerenciados automaticamente via Mason.
 | `lua_ls` | LSP | Lua |
 | `jsonls` | LSP | JSON/JSONC |
 | `basedpyright` | LSP | Python |
+| `texlab` | LSP | LaTeX |
 | `ruff` | Formatador/Linter | Python |
 | `debugpy` | DAP | Python |
 | `stylua` | Formatador | Lua |
