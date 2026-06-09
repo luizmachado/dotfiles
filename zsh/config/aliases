@@ -36,3 +36,4 @@ alias pbcopy='xclip -selection clipboard -i'
 # fabric — patterns customizados
 alias cria_commit='fabric --pattern cria_commit'
 alias corrige_pt='fabric --pattern corrige_pt'
+alias cria_instrucao='fabric --pattern cria_instrucao'
