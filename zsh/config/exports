@@ -1,4 +1,4 @@
-#!/usr/env/bin bash
+#!/usr/bin/env bash
 # vim: set filetype=sh :
 # shellcheck disable=SC1091,SC2154
 
@@ -31,29 +31,15 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"                   # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion" # This loads nvm bash_completion
 
-# BE SURE TO FIX THE ENV VARIABLES
-# brew install libpq --build-from-source
-# brew install mysql-client
-# brew install openssl
-# brew install curl
-
-if [ "$(uname -s)" = "Linux" ]; then
-  PATH="/home/linuxbrew/.linuxbrew/bin:${PATH}"
-  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-fi
-
 export PYENV_ROOT="${HOME}/.pyenv"
-PATH="${PYENV_ROOT}/bin:${PYENV_ROOT}/shims:${PATH}"
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
-
-. "$HOME/.local/bin/env"
-[ -f ~/.fzf.zsh ] && . "${HOME}/.fzf.zsh"
-
-if [[ "$(uname -s)" == "Linux" ]]; then
-  [[ -r "/home/linuxbrew/.linuxbrew/etc/profile.d/bash_completion.sh" ]] &&
-    . "/home/linuxbrew/.linuxbrew/etc/profile.d/bash_completion.sh"
+if [[ -d "${PYENV_ROOT}" ]]; then
+  PATH="${PYENV_ROOT}/bin:${PYENV_ROOT}/shims:${PATH}"
+  eval "$(pyenv init -)"
+  eval "$(pyenv virtualenv-init -)"
 fi
+
+[ -f "$HOME/.local/bin/env" ] && . "$HOME/.local/bin/env"
+[ -f ~/.fzf.zsh ] && . "${HOME}/.fzf.zsh"
 
 if [[ "$(command -v docker)" && -f "${HOME}/.docker/completions/_docker" ]]; then
   eval "$(docker completion zsh)"
@@ -63,17 +49,8 @@ if [[ "$(command -v gh)" ]]; then
   eval "$(gh completion -s zsh)"
 fi
 
-# bun
-export BUN_INSTALL="$HOME/.bun"
-PATH="$BUN_INSTALL/bin:$PATH"
-
-# Added by Antigravity
-PATH="$HOME/.antigravity/antigravity/bin:$PATH"
-
-PATH="$PATH:/opt/nvim/"
-
-# Go
+# Go (tarball oficial em /usr/local/go — ver scripts/install-go.sh)
 export GOPATH="${HOME}/go"
-PATH="${GOPATH}/bin:${PATH}"
+PATH="/usr/local/go/bin:${GOPATH}/bin:${PATH}"
 
 export PATH

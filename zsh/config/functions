@@ -53,10 +53,12 @@ componentJs() {
 
 aula_c() {
   [ -z "$1" ] && echo "Empty Param, send a class name" && return
+  local desktop
+  desktop="$(xdg-user-dir DESKTOP)"
   ffmpeg -i \
-    "${HOME}/Desktop/$1.mp4" -vf "scale=1920:1080" -sws_flags lanczos \
+    "${desktop}/$1.mp4" -vf "scale=1920:1080" -sws_flags lanczos \
     -c:v libx264 -crf 23 -preset slow -c:a aac -b:a 160k \
-    "${HOME}/Desktop/$1-c.mp4"
+    "${desktop}/$1-c.mp4"
 }
 
 memoryUsage() {
@@ -67,10 +69,14 @@ memoryUsage() {
 deletePythonCache() {
     echo "Limpando diretórios de cache e build..."
 
-    deactivate
+    [[ -n "${VIRTUAL_ENV:-}" ]] && command -v deactivate >/dev/null && deactivate
 
-    find . -type d \( -name "__pycache__" -o -name ".pytest_cache" -o -name ".tox" -o -name "*.egg-info" -o -name "build" -o -name "dist" \) -exec rm -r {} \;
-    find . -type f \( -name "*.pyc" -o -name "*.pyo" \) -delete
+    # Poda .git, node_modules e venvs para não apagar build/dist de dependências
+    find . -type d \( -name ".git" -o -name "node_modules" -o -name ".venv" -o -name "venv" \) -prune -o \
+      -type d \( -name "__pycache__" -o -name ".pytest_cache" -o -name ".tox" -o -name "*.egg-info" -o -name "build" -o -name "dist" \) \
+      -prune -exec rm -r {} +
+    find . \( -name ".git" -o -name "node_modules" -o -name ".venv" -o -name "venv" \) -prune -o \
+      -type f \( -name "*.pyc" -o -name "*.pyo" \) -exec rm -f {} +
 
     echo "Limpeza concluída com sucesso!"
 }
@@ -91,7 +97,8 @@ show_colors() {
 }
 
 gitconfig() {
-  set -e
+  # errreturn local: 'set -e' ligaria o errexit no shell interativo
+  setopt localoptions errreturn
 
   log "Your name:"
   read -r NAME
@@ -192,8 +199,8 @@ cleanNeovimLogs() {
   [[ -d ${HOME}/.local/state/nvim ]] && rm -Rfv ~/.local/state/nvim/*.log
   [[ -d ${HOME}/.cache/nvim ]] && {
       rm -Rfv ~/.cache/nvim/*.log
-      "rm -Rfv ${HOME}/.cache/nvim/shada"
-      "rm -Rfv ${HOME}/.cache/nvim/sessions"
+      rm -Rfv "${HOME}/.cache/nvim/shada"
+      rm -Rfv "${HOME}/.cache/nvim/sessions"
   }
 
   logsuccess "NeoVim cleaned..."
@@ -267,9 +274,12 @@ help() {
 }
 
 tmux_make_sessions() {
-  projects_dir=${1:-${HOME}/Desktop/tutoriais_e_cursos}
+  projects_dir=${1:-$(xdg-user-dir DESKTOP)/tutoriais_e_cursos}
 
-  [[ -d "${projects_dir}" ]] || logerror "'${projects_dir}' is not a directory"
+  if [[ ! -d "${projects_dir}" ]]; then
+    logerror "'${projects_dir}' is not a directory"
+    return 1
+  fi
 
   tmux kill-server
 
@@ -287,7 +297,7 @@ tmux_make_sessions() {
     tmux kill-window -t "${window}"
   done
 
-  for session in $(tmux list-sessions -a -F "#S"); do
+  for session in $(tmux list-sessions -F "#S"); do
     logwarning "Removing session ${session}"
     tmux kill-session -t "${session}"
   done
@@ -352,37 +362,35 @@ updateall() {
   cleanNeovimLogs
 
   log "Synchronizing ZSH history to local computers..."
-  pyenv exec "${HOME}/dotfiles/scripts/zsh_history_sync.py"
+  "${HOME}/dotfiles/scripts/zsh_history_sync.py"
   sleep 5
 
-  log "Running brew update"
-  brew update
-  log "Running brew upgrade"
-  brew upgrade
+  log "Running apt update/full-upgrade/autoremove"
+  sudo apt update && sudo apt full-upgrade -y && sudo apt autoremove -y
+  log "Updating Go"
+  "${HOME}/dotfiles/scripts/install-go.sh"
   log "Running omz update"
   omz update
-  log "Running brew cleanup"
-  brew cleanup
 
   log "Running uv self update"
   uv self update
-  log "Running uv upgrade tools: pyright mupy ruff"
+  log "Running uv upgrade tools: pyright mypy ruff"
   uv tool upgrade pyright mypy ruff
   log "Running uv python upgrade"
   uv python upgrade
 
   log "Atualizando fabric..."
-  go install github.com/danielmiessler/fabric@latest
+  go install github.com/danielmiessler/fabric/cmd/fabric@latest
 
-  log "Running npm upgrade for global packages: gemini npm prettier pyright"
-  npm -g upgrade @google/gemini-cli npm prettier pyright
+  log "Running npm upgrade for global packages: gemini npm prettier tree-sitter-cli"
+  npm -g upgrade @google/gemini-cli npm prettier tree-sitter-cli
 
   log "Sleeping for 1 sec..."
   sleep 1
 }
 
 clear () {
-  tmux clear-history
+  [[ -n "${TMUX:-}" ]] && tmux clear-history
   printf '\e[H\e[2J\e[3J'
 }
 
@@ -411,7 +419,7 @@ convert_for_youtube() {
   local -a cmd=(
     ffmpeg -fflags +genpts+igndts
     -i "$input"
-    -c:v h264_videotoolbox -profile:v high -q:v 30
+    -c:v libx264 -profile:v high -preset slow -crf 20
     -pix_fmt yuv420p
     -c:a aac -ar 48000 -b:a 192k
     -shortest -movflags +faststart
@@ -429,7 +437,7 @@ backup_ssh() {
 
   (
     ssh_dir="${HOME}/.ssh"
-    output_dir="${HOME}/Desktop"
+    output_dir="$(xdg-user-dir DESKTOP)"
     output_file="${output_dir}/$(date "+%Y-%m-%d-%H-%M-%S-${HOST}").7z"
 
     [[ -z "${HOST:-}" ]] && logerror "No hostname found" && return 1
@@ -471,16 +479,15 @@ backup_ssh() {
 }
 
 killgui() {
-  echo ">> Stopping graphical interface (sddm + wayland)..."
-  sudo systemctl stop sddm
-  sudo systemctl stop graphical.target
+  echo ">> Stopping graphical interface (display manager + X11)..."
+  sudo systemctl stop display-manager.service
+  sudo systemctl isolate multi-user.target
   echo ">> GUI stopped. SSH-only mode active."
 }
 
 startgui() {
   echo ">> Starting graphical interface..."
-  sudo systemctl start graphical.target
-  sudo systemctl start sddm
+  sudo systemctl isolate graphical.target
 }
 
 tmux_kill_others() {
