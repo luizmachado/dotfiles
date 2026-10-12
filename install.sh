@@ -44,10 +44,18 @@ _setup_git_identity() {
 		return
 	fi
 	loginfo "Configurando identidade git..."
-	printf "Nome completo para commits git: "
-	read -r GIT_NAME
-	printf "Email para commits git: "
-	read -r GIT_EMAIL
+	# shellcheck disable=SC1091
+	[[ -f "${HOME}/.dotfiles.local" ]] && source "${HOME}/.dotfiles.local"
+	GIT_NAME="${DOTFILES_GIT_NAME:-}"
+	GIT_EMAIL="${DOTFILES_GIT_EMAIL:-}"
+	if [[ -z "$GIT_NAME" || "$GIT_NAME" == "Seu Nome" ]]; then
+		printf "Nome completo para commits git: "
+		read -r GIT_NAME
+	fi
+	if [[ -z "$GIT_EMAIL" || "$GIT_EMAIL" == "voce@exemplo.com" ]]; then
+		printf "Email para commits git: "
+		read -r GIT_EMAIL
+	fi
 	printf '[user]\n\tname = %s\n\temail = %s\n[credential]\n\thelper = store\n' \
 		"$GIT_NAME" "$GIT_EMAIL" > "${HOME}/.gitconfig.local"
 	logsuccess "~/.gitconfig.local criado."
@@ -62,28 +70,16 @@ _setup_git_identity() {
 # garante que o script pare em caso de erro
 set -e
 
-# Vamos tentar descobrir o sistema operacional
+# Só Ubuntu/Debian são suportados
 OP_SYSTEM=""
-
-if [ "$(uname -s)" == "Linux" ]; then
-	echo "This system is Linux."
-	if [ -f /etc/os-release ]; then
-		# shellcheck disable=SC1091
-		. /etc/os-release
-		if [ "$ID" == "ubuntu" ] || [ "$ID" == "debian" ]; then
-			OP_SYSTEM="ubuntu" # ubuntu ou debian
-		else
-			# Aqui não sei qual sistema é, mas é Linux
-			logerror "This is another Linux distribution: $PRETTY_NAME"
-		fi
-	elif command -v lsb_release &>/dev/null; then
-		if lsb_release -d | grep -qE "Ubuntu|Debian"; then
-			OP_SYSTEM="ubuntu" # ubuntu ou debian
-		fi
+if [ -f /etc/os-release ]; then
+	# shellcheck disable=SC1091
+	. /etc/os-release
+	if [ "$ID" == "ubuntu" ] || [ "$ID" == "debian" ]; then
+		OP_SYSTEM="ubuntu" # ubuntu ou debian
+	else
+		logerror "Distribuição não suportada: $PRETTY_NAME"
 	fi
-else
-	logerror "It is not safe to run this script on your system."
-	exit 1
 fi
 
 if [[ "$OP_SYSTEM" == "ubuntu" ]]; then
@@ -107,20 +103,20 @@ if [[ "$OP_SYSTEM" == "ubuntu" ]]; then
 		openssl bat cmake ffmpeg fzf htop nano \
 		p7zip pkgconf sqlite3 tcl tk tcl-dev tk-dev tmux \
 		tree watch wget fonts-firacode fonts-jetbrains-mono vim \
-		rofi picom fontconfig \
+		rofi picom fontconfig fd-find flameshot libnotify-bin p7zip-full \
 		-y
 
-	sudo apt install lua5.4 liblua5.4-dev unzip make build-essential luarocks ripgrep xclip
-	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-	eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-	brew install gcc
+	sudo apt install lua5.4 liblua5.4-dev unzip make build-essential luarocks ripgrep xclip -y
 
-	if ! command -v go &>/dev/null; then
-		loginfo "Installing Go..."
-		brew install go
-	else
-		loginfo "Go já instalado..."
+	# Debian/Ubuntu instalam o fd como 'fdfind'
+	mkdir -p "$HOME/.local/bin"
+	if command -v fdfind &>/dev/null; then
+		rm -f "$HOME/.local/bin/fd" && ln -sf "$(command -v fdfind)" "$HOME/.local/bin/fd"
 	fi
+
+	# Go do tarball oficial (o apt do Debian 12 traz o 1.19, velho demais para o fabric)
+	"$HOME/dotfiles/scripts/install-go.sh"
+	export PATH="/usr/local/go/bin:$HOME/go/bin:$PATH"
 
 	# Infelizmente vamos ter que buildar o neovim do zero
 	# os repositórios do Ubuntu/Debian não têm versão recente
@@ -130,7 +126,6 @@ if [[ "$OP_SYSTEM" == "ubuntu" ]]; then
 		cd ~/neovim
 		git checkout stable
 		make CMAKE_BUILD_TYPE=Release
-		sudo make install
 		cd build
 		sudo cpack -G DEB
 		sudo dpkg -i nvim-linux*.deb
@@ -143,7 +138,7 @@ if [[ "$OP_SYSTEM" == "ubuntu" ]]; then
 	if ! command -v zsh &>/dev/null; then
 		loginfo "Installing ZSH..."
 		sudo apt install zsh -y
-		chsh -s $(which zsh)
+		chsh -s "$(command -v zsh)"
 	else
 		loginfo "zsh já instalado..."
 	fi
@@ -157,8 +152,12 @@ if [[ "$OP_SYSTEM" == "ubuntu" ]]; then
 		loginfo "latexmk já instalado, pulando LaTeX..."
 	fi
 
-	loginfo "Installing Ghostty..."
-	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/mkasberg/ghostty-ubuntu/HEAD/install.sh)"
+	if ! command -v ghostty &>/dev/null; then
+		loginfo "Installing Ghostty..."
+		/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/mkasberg/ghostty-ubuntu/HEAD/install.sh)"
+	else
+		loginfo "Ghostty já instalado..."
+	fi
 
 	# JetBrainsMono Nerd Font — habilita ícones no i3bar, rofi e terminal
 	NERD_FONT_DIR="$HOME/.local/share/fonts/NerdFonts"
@@ -216,17 +215,15 @@ if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
 	git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 fi
 
-if ! command -v pyenv &>/dev/null; then
-	# Pyenv e uv
-	loginfo "Installing Pyenv and uv..."
-	rm -Rf "${HOME}/.pyenv"
+# Testa o diretório: ~/.pyenv/bin ainda não está no PATH deste script
+if [ ! -d "${HOME}/.pyenv" ]; then
+	loginfo "Installing Pyenv..."
 	curl -fsSL https://pyenv.run | bash
-	curl -LsSf https://astral.sh/uv/install.sh | sh
 else
 	loginfo "Pyenv já instalado..."
 fi
 
-if ! command -v uv &>/dev/null; then
+if ! command -v uv &>/dev/null && [ ! -x "${HOME}/.local/bin/uv" ]; then
 	# UV
 	loginfo "Installing uv..."
 	curl -LsSf https://astral.sh/uv/install.sh | sh
@@ -234,16 +231,16 @@ else
 	loginfo "UV já instalado..."
 fi
 
-if ! command -v fabric &>/dev/null; then
+if [ ! -x "${HOME}/go/bin/fabric" ]; then
 	loginfo "Installing fabric..."
 	go install github.com/danielmiessler/fabric/cmd/fabric@latest
 else
 	loginfo "fabric já instalado..."
 fi
 
-if ! command -v nvm &>/dev/null; then
-	# NVM
-	rm -Rf "${HOME}/.nvm"
+# nvm é uma função de shell: 'command -v nvm' nunca a encontra aqui
+if [ ! -s "${HOME}/.nvm/nvm.sh" ]; then
+	loginfo "Installing NVM..."
 	curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
 else
 	loginfo "NVM já instalado..."
@@ -317,13 +314,34 @@ ln -sf "$HOME/dotfiles/ghostty" "$HOME/.config/ghostty"
 # fabric — patterns customizados
 loginfo "Configurando padrões customizados do fabric..."
 mkdir -p "$HOME/.config/fabric/patterns"
+fabric_patterns=()
 for pattern_dir in "$HOME/dotfiles/fabric/patterns"/*/; do
     pattern_name=$(basename "$pattern_dir")
     rm -Rf "$HOME/.config/fabric/patterns/$pattern_name"
     ln -sf "$HOME/dotfiles/fabric/patterns/$pattern_name" \
            "$HOME/.config/fabric/patterns/$pattern_name"
+    fabric_patterns+=("$pattern_name")
 done
-logsuccess "Padrões fabric configurados: cria_commit, corrige_pt"
+logsuccess "Padrões fabric configurados: ${fabric_patterns[*]}"
+
+# fastfetch
+mkdir -p "$HOME/.config/fastfetch"
+rm -f "$HOME/.config/fastfetch/config.jsonc"
+ln -sf "$HOME/dotfiles/fastfetch/config.jsonc" "$HOME/.config/fastfetch/config.jsonc"
+
+# Tema atual (dark|light) — respeita a escolha feita pelo toggle-theme.sh
+if [ ! -f "$HOME/.theme-mode" ]; then
+	echo "dark" > "$HOME/.theme-mode"
+fi
+THEME_MODE=$(cat "$HOME/.theme-mode")
+[[ "$THEME_MODE" == "light" ]] || THEME_MODE="dark"
+if [[ "$THEME_MODE" == "light" ]]; then
+	I3_THEME_FILE="theme-light.conf"
+	ROFI_THEME_FILE="config-light.rasi"
+else
+	I3_THEME_FILE="theme.conf"
+	ROFI_THEME_FILE="config.rasi"
+fi
 
 # i3wm — tema e keybindings (via include — NÃO substitui o config principal do usuário)
 if command -v i3 &>/dev/null; then
@@ -338,7 +356,7 @@ if command -v i3 &>/dev/null; then
 
     # ── tema Tokyo Night (font, cores, bordas, gaps, picom) ───────────────────
     rm -f "$HOME/.config/i3/theme.conf"
-    ln -sf "$HOME/dotfiles/i3/theme.conf" "$HOME/.config/i3/theme.conf"
+    ln -sf "$HOME/dotfiles/i3/$I3_THEME_FILE" "$HOME/.config/i3/theme.conf"
 
     # ── injeta includes no config principal (idempotente: remove e re-adiciona) ─
     # Abordagem "remove + re-add" evita duplicatas mesmo se o script rodar
@@ -364,7 +382,7 @@ if command -v i3 &>/dev/null; then
     # ── rofi: launcher moderno com tema Tokyo Night ───────────────────────────
     mkdir -p "$HOME/.config/rofi"
     rm -f "$HOME/.config/rofi/config.rasi"
-    ln -sf "$HOME/dotfiles/i3/rofi/config.rasi" "$HOME/.config/rofi/config.rasi"
+    ln -sf "$HOME/dotfiles/i3/rofi/$ROFI_THEME_FILE" "$HOME/.config/rofi/config.rasi"
     logsuccess "Rofi config symlinked para ~/.config/rofi/config.rasi"
 
     # ── patch cirúrgico: injeta cores Tokyo Night no bloco bar{} ─────────────
@@ -398,12 +416,9 @@ fi
 
 
 # --- Tema inicial ---
-loginfo "Configurando arquivos de tema inicial (dark)..."
-if [ ! -f "$HOME/.theme-mode" ]; then
-	echo "dark" > "$HOME/.theme-mode"
-fi
-cp "$HOME/dotfiles/tmux/theme-dark.conf" "$HOME/.tmux-theme.conf"
-cp "$HOME/dotfiles/ghostty/themes/dark.conf" "$HOME/.theme-active-ghostty.conf"
+loginfo "Configurando arquivos de tema inicial (${THEME_MODE})..."
+cp "$HOME/dotfiles/tmux/theme-${THEME_MODE}.conf" "$HOME/.tmux-theme.conf"
+cp "$HOME/dotfiles/ghostty/themes/${THEME_MODE}.conf" "$HOME/.theme-active-ghostty.conf"
 logsuccess "Arquivos de tema inicial configurados (~/.tmux-theme.conf, ~/.theme-active-ghostty.conf)."
 echo -e "
 [1;33mATENÇÃO: Passos manuais necessários:[0m"
