@@ -88,7 +88,15 @@ Documentação completa: [`docs/repl.md`](repl.md)
 O REPL é detectado automaticamente pelo `filetype`. Para Julia, usa
 `julia --startup-file=no --color=yes`. Para Python, usa `python3`.
 
-### LaTeX (vimtex)
+### LaTeX (vimtex + texlab)
+
+Base no extra `lang.tex` do LazyVim (vimtex, LSP `texlab`, parsers treesitter `latex`/`bibtex`
+com highlight do treesitter desativado em favor do vimtex). Ajustes em `lua/plugins/latex.lua`:
+
+- Compilação com `latexmk`; PDF e arquivos auxiliares em `build/` (o texlab lê labels/citações de lá)
+- Visualizador Zathura (`zathura/zathurarc`, tema dark/light seguindo o `toggle-theme.sh`)
+- `chktex` como linter via texlab
+- Spell `pt_br,en_us`, `wrap` e `linebreak` em arquivos `tex`/`bib` (`lua/config/autocmds.lua`)
 
 | Atalho | Modo | Ação |
 |---|---|---|
@@ -100,8 +108,14 @@ O REPL é detectado automaticamente pelo `filetype`. Para Julia, usa
 | `\lt` | n | Tabela de conteúdo |
 | `\le` | n | Lista de erros |
 | `\lq` | n | Log do compilador |
+| `K` | n | Hover do LSP (texlab) |
+| `<leader>K` | n | Documentação do pacote sob o cursor (vimtex) |
 
-Forward search abre/foca o Zathura na linha atual. Reverse search: `Ctrl+clique` no Zathura volta ao cursor no Neovim.
+Forward search abre/foca o Zathura na linha atual (requer `xdotool`). Reverse search: `Ctrl+clique` no Zathura volta ao cursor no Neovim.
+
+**Requisitos:** o vimtex atual exige Neovim ≥ 0.12.4 (`scripts/install-nvim.sh`). Bibliografia com
+biblatex usa `biber` + `texlive-bibtex-extra`. Os parsers treesitter exigem o `tree-sitter` CLI ≥ 0.26.1
+(binário do GitHub em `~/.local/bin`, instalado por `scripts/install-tools.sh` — **não** via npm).
 
 ### LSP e código
 

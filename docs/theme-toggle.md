@@ -1,6 +1,6 @@
 # Toggle de Tema (Escuro/Claro)
 
-Sistema unificado de alternância de tema escuro/claro em todo o stack: i3wm, rofi, tmux, Ghostty e Neovim.
+Sistema unificado de alternância de tema escuro/claro em todo o stack: i3wm, rofi, tmux, Ghostty, Zathura e Neovim.
 
 ---
 
@@ -15,7 +15,8 @@ Um script central (`scripts/toggle-theme.sh`) coordena a alternância em todas a
 | rofi | Tokyo Night padrão | Tokyo Night adaptado |
 | tmux | `~/.tmux-theme.conf` dinâmico | `~/.tmux-theme.conf` dinâmico |
 | Ghostty | `~/.theme-active-ghostty.conf` | `~/.theme-active-ghostty.conf` |
-| Neovim | `tokyonight` | `tokyonight` (com ajustes de background) |
+| Zathura | `~/.config/zathura/theme-active` ← `zathura/themes/dark` | ← `zathura/themes/light` |
+| Neovim | `tokyonight-night` | `tokyonight-day` |
 
 ---
 
@@ -23,7 +24,7 @@ Um script central (`scripts/toggle-theme.sh`) coordena a alternância em todas a
 
 | Contexto | Atalho | Ação |
 |---|---|---|
-| **i3wm** | `$mod+t` | Toggle tema sistema (i3 + rofi + tmux + Ghostty) |
+| **i3wm** | `$mod+t` | Toggle tema sistema (i3 + rofi + tmux + Ghostty + Zathura; o Neovim acompanha ao ganhar foco) |
 | **Neovim** | `<leader>ut` | Toggle tema Neovim (escreve `~/.theme-mode`, recarrega) |
 | **REPL** | `<leader>ro` | Toggle layout REPL (vertical ↔ horizontal) — não afeta tema |
 
@@ -31,14 +32,15 @@ Um script central (`scripts/toggle-theme.sh`) coordena a alternância em todas a
 
 ## Como funciona
 
-### Sistema (i3 + rofi + tmux + Ghostty)
+### Sistema (i3 + rofi + tmux + Ghostty + Zathura)
 
 1. Pressione `$mod+t` em i3wm
 2. Script `scripts/toggle-theme.sh` é executado:
    - Lê `~/.theme-mode` (dark ou light)
    - Alterna para o oposto
    - Troca symlinks em `~/.config/i3/theme.conf` e `~/.config/rofi/config.rasi`
-   - Copia temas para `~/.tmux-theme.conf` e `~/.theme-active-ghostty.conf`
+   - Copia temas para `~/.tmux-theme.conf`, `~/.theme-active-ghostty.conf` e `~/.config/zathura/theme-active`
+     (o Zathura aplica o tema nas próximas janelas abertas)
    - Envia `SIGHUP` ao i3 para recarregar config
 3. Todas as ferramentas refletem o novo tema imediatamente
 
@@ -46,7 +48,7 @@ Um script central (`scripts/toggle-theme.sh`) coordena a alternância em todas a
 
 1. Pressione `<leader>ut` (toggle via Snacks.toggle)
 2. Plugin `nvim/lua/plugins/colorscheme.lua`:
-   - Lê `~/.theme-mode` no startup
+   - Lê `~/.theme-mode` no startup e de novo a cada `FocusGained` (acompanha o `$mod+t`)
    - Ao toggle, escreve novo estado em `~/.theme-mode`
    - Recarrega o colorscheme com ajustes via `vim.g.tokyonight_transparent`
 

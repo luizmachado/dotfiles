@@ -114,7 +114,7 @@ Clipboard: use `clipcopy` / `clippaste` (nativos do Oh My Zsh, via xclip).
 
 | Função | Descrição |
 |---|---|
-| `updateall` | Atualiza tudo: Oh-My-Zsh, npm, uv tools, histórico |
+| `updateall` | Atualiza tudo: apt, Go, Neovim, tree-sitter/lazygit, Oh-My-Zsh, uv tools, fabric, npm, histórico |
 | `cleanNeovimLogs` | Remove logs e cache do Neovim |
 | `restart_terminal` | Salva histórico, recarrega .zshrc e resincroniza tmux |
 

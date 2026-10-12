@@ -99,7 +99,7 @@ Configuração modular carregada pelo `.zshrc`. Os arquivos ficam em `zsh/config
 - `tmux_respawn_all` — reseta e resincroniza histórico em todos os panes
 - `sshc` — wrapper de SSH que indica estado no tmux
 - `cleanNeovimLogs` — limpa logs e cache do Neovim
-- `updateall` — atualiza apt, Go, Oh My Zsh, uv, fabric, npm globais e sincroniza o histórico
+- `updateall` — atualiza apt, Go, Neovim, tree-sitter/lazygit, Oh My Zsh, uv, fabric, npm globais e sincroniza o histórico
 - `ollama_stop_all` / `ollama_update_models` — gerencia LLMs locais
 - `backup_ssh` — faz backup criptografado (7zip) do diretório SSH
 
@@ -226,7 +226,6 @@ Após rodar o `install.sh`, o próprio script irá pausar e pedir que esses coma
 nvm install --lts
 nvm install-latest-npm
 npm i -g prettier
-npm i -g tree-sitter-cli   # necessário para o nvim-treesitter compilar parsers
 ```
 
 **Python (via pyenv + uv):**
