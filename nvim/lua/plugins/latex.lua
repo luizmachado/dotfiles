@@ -1,13 +1,31 @@
+-- LaTeX: base vem do extra `lang.tex` do LazyVim (vimtex, texlab, parsers
+-- latex/bibtex e desativação do highlight treesitter, que o vimtex substitui).
+-- Aqui ficam só os ajustes pessoais. Atalhos do vimtex: <localleader>l… (\ll, \lv…).
 return {
   {
     "lervag/vimtex",
-    lazy = false,
     init = function()
-      vim.g.vimtex_view_method = "zathura"
+      vim.g.vimtex_view_method = "zathura" -- forward search requer xdotool
       vim.g.vimtex_compiler_method = "latexmk"
-      vim.g.vimtex_mappings_prefix = "\\"
-      -- Desativa o atalho <localleader>li que conflita com o LazyVim
-      vim.g.vimtex_mappings_disable = { n = { "\\li" } }
+      -- Arquivos auxiliares e PDF em build/ (mantém o diretório do projeto limpo)
+      vim.g.vimtex_compiler_latexmk = { out_dir = "build", aux_dir = "build" }
     end,
+  },
+
+  {
+    "neovim/nvim-lspconfig",
+    opts = {
+      servers = {
+        texlab = {
+          settings = {
+            texlab = {
+              -- Mesmo diretório do vimtex, para o texlab achar labels e citações
+              auxDirectory = "build",
+              chktex = { onOpenAndSave = true },
+            },
+          },
+        },
+      },
+    },
   },
 }
