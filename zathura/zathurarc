@@ -1,0 +1,16 @@
+# Zathura — visualizador de PDF usado pelo vimtex
+# Gerenciado pelo dotfiles: dotfiles/zathura/zathurarc
+
+set font "JetBrainsMono Nerd Font 10"
+set selection-clipboard clipboard
+set synctex true
+set adjust-open "best-fit"
+set scroll-step 80
+set statusbar-h-padding 8
+set statusbar-v-padding 4
+
+# Ctrl+r alterna o recolor (PDF nas cores do tema)
+set recolor-keephue true
+
+# Tema dark/light — copiado por install.sh e scripts/toggle-theme.sh
+include theme-active

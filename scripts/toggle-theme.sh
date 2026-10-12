@@ -1,5 +1,6 @@
 #!/bin/bash
-# Alterna entre tema escuro e claro em todo o stack: i3, rofi, tmux, Ghostty.
+# Alterna entre tema escuro e claro em todo o stack: i3, rofi, tmux, Ghostty, Zathura.
+# O Neovim relê ~/.theme-mode ao ganhar foco.
 # Estado persistido em ~/.theme-mode (dark|light).
 
 STATE_FILE="$HOME/.theme-mode"
@@ -37,6 +38,10 @@ cp "$DOTFILES/tmux/theme-${new}.conf" "$HOME/.tmux-theme.conf"
 if command -v tmux &>/dev/null && tmux info &>/dev/null 2>&1; then
   tmux source-file "$HOME/.tmux-theme.conf" 2>/dev/null || true
 fi
+
+# Zathura: copia o tema incluído pelo zathurarc (vale para as próximas janelas)
+mkdir -p "$HOME/.config/zathura"
+cp "$DOTFILES/zathura/themes/${new}" "$HOME/.config/zathura/theme-active"
 
 # Ghostty: copia arquivo de tema e envia SIGHUP para hot reload
 cp "$DOTFILES/ghostty/themes/${new}.conf" "$HOME/.theme-active-ghostty.conf"
