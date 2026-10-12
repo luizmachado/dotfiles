@@ -1,19 +1,15 @@
-#!/usr/bin/env python3.14
+#!/usr/bin/env python3
 
-# ruff: noqa: S607,S602
+# ruff: noqa: S603,S607
 import os
+import shutil
 import subprocess
 import sys
 import time
+from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-
-
-ROOT_DIR = Path(__file__).parent.parent
 curr_history_filename = ".zsh_history"
 
 HOME = Path.home()
@@ -38,7 +34,8 @@ def history_to_entries(raw_bytes: bytes) -> set[ZshHistoryEntry]:
         if line.startswith(line_start):
             if history_entry:
                 entry = parse_entry(history_entry)
-                entries.add(entry)
+                if entry is not None:
+                    entries.add(entry)
 
             history_entry = line
         else:
@@ -46,27 +43,36 @@ def history_to_entries(raw_bytes: bytes) -> set[ZshHistoryEntry]:
 
     if history_entry:
         entry = parse_entry(history_entry)
-        entries.add(entry)
+        if entry is not None:
+            entries.add(entry)
 
     return entries
 
 
-def parse_entry(entry: bytes) -> ZshHistoryEntry:
+def parse_entry(entry: bytes) -> ZshHistoryEntry | None:
+    """Parse de uma entrada ': <timestamp>:<duração>;<comando>'.
+
+    Retorna None para entradas malformadas (ex.: linhas soltas no topo do arquivo).
+    """
     line_start = b": "
     cmd_splitter = b";"
     meta_splitter = b":"
     empty_byte = b""
 
-    meta: bytes | None = None
-    command: bytes | None = None
+    try:
+        meta, command = (
+            entry.strip().replace(line_start, empty_byte, 1).split(cmd_splitter, 1)
+        )
+        timestamp, duration = meta.split(meta_splitter)
+        int(timestamp)
+    except ValueError:
+        return None
 
-    meta, command = (
-        entry.strip().replace(line_start, empty_byte, 1).split(cmd_splitter, 1)
-    )
-    timestamp, duration = meta.split(meta_splitter)
+    # Garante a quebra de linha final, senão a próxima entrada gruda nesta
+    raw = entry if entry.endswith(b"\n") else entry + b"\n"
 
     return ZshHistoryEntry(
-        timestamp=timestamp, duration=duration, command=command, raw=entry
+        timestamp=timestamp, duration=duration, command=command, raw=raw
     )
 
 
@@ -80,53 +86,43 @@ def merge_history(
     return sorted(all_entries, key=lambda e: int(e.timestamp))
 
 
-def merge_and_overwrite_histories(
-    curr_history_path: Path,
-) -> None:
-    BKP_ZSH_HISTORY_DIR.mkdir(exist_ok=True)
+def fetch_remote_history(sync_host: str) -> bytes | None:
+    out = subprocess.run(
+        ["ssh", sync_host, f"cat ~/{curr_history_filename}"],
+        check=False,
+        capture_output=True,
+    )
+    if out.returncode != 0:
+        print(f"Falha ao buscar histórico de {sync_host}:", out.stderr.decode().strip())
+        return None
+    if not out.stdout.strip():
+        print(f"Histórico remoto de {sync_host} vazio, nada a fazer.")
+        return None
+    return out.stdout
 
-    zsh_source_cmds = f"""
-    fc -W
-    source {Path.home() / ".zshrc"}
-    fc -W
-    """
+
+def merge_and_overwrite_histories(curr_history_path: Path) -> None:
     sync_host = os.environ.get("DOTFILES_HISTORY_SYNC_HOST", "")
     if not sync_host:
         print("DOTFILES_HISTORY_SYNC_HOST não definido, pulando sync remoto.")
         return
-    ssh_cp_zsh_history_cmd = f"ssh {sync_host} 'cat .zsh_history'"
-    subprocess.run(["fc", "-W"], check=False, shell=True)
-    subprocess.run(
-        ["-l", "-c", zsh_source_cmds],
-        executable="/bin/zsh",
-        check=False,
-        shell=True,
-        capture_output=True,
-    )
-    out = subprocess.run(
-        ["-l", "-c", ssh_cp_zsh_history_cmd],
-        executable="/bin/zsh",
-        check=False,
-        shell=True,
-        capture_output=True,
-    )
-    merge_history_bytes = out.stdout
+
+    # O histórico local já foi gravado com 'fc -W' pela função zsh que chama este script
+    merge_history_bytes = fetch_remote_history(sync_host)
+    if merge_history_bytes is None:
+        return
 
     merged_history_entries = merge_history(curr_history_path, merge_history_bytes)
-    curr_history_path.copy(BKP_ZSH_HISTORY_DIR / f".zsh_history_BKP_{int(time.time())}")
 
-    with CURR_ZSH_HISTORY.open("wb") as curr_file_obj:
+    BKP_ZSH_HISTORY_DIR.mkdir(exist_ok=True)
+    shutil.copy2(
+        curr_history_path,
+        BKP_ZSH_HISTORY_DIR / f".zsh_history_BKP_{int(time.time())}",
+    )
+
+    with curr_history_path.open("wb") as curr_file_obj:
         for entry in merged_history_entries:
             curr_file_obj.write(entry.raw)
-
-    subprocess.run(["fc", "-W"], check=False, shell=True)
-    subprocess.run(
-        ["-l", "-c", zsh_source_cmds],
-        executable="/bin/zsh",
-        check=False,
-        shell=True,
-        capture_output=True,
-    )
 
 
 if __name__ == "__main__":
