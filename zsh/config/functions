@@ -369,6 +369,10 @@ updateall() {
   sudo apt update && sudo apt full-upgrade -y && sudo apt autoremove -y
   log "Updating Go"
   "${HOME}/dotfiles/scripts/install-go.sh"
+  log "Updating Neovim (compila se houver release nova)"
+  "${HOME}/dotfiles/scripts/install-nvim.sh"
+  log "Updating tree-sitter CLI e lazygit"
+  "${HOME}/dotfiles/scripts/install-tools.sh"
   log "Running omz update"
   omz update
 
@@ -382,8 +386,8 @@ updateall() {
   log "Atualizando fabric..."
   go install github.com/danielmiessler/fabric/cmd/fabric@latest
 
-  log "Running npm upgrade for global packages: gemini npm prettier tree-sitter-cli"
-  npm -g upgrade @google/gemini-cli npm prettier tree-sitter-cli
+  log "Running npm upgrade for global packages: gemini npm prettier"
+  npm -g upgrade @google/gemini-cli npm prettier
 
   log "Sleeping for 1 sec..."
   sleep 1

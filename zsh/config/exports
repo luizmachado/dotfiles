@@ -53,4 +53,7 @@ fi
 export GOPATH="${HOME}/go"
 PATH="/usr/local/go/bin:${GOPATH}/bin:${PATH}"
 
+# Binários do usuário (tree-sitter, lazygit, fd…) têm prioridade sobre o apt
+PATH="${HOME}/.local/bin:${PATH}"
+
 export PATH
