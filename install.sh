@@ -118,22 +118,12 @@ if [[ "$OP_SYSTEM" == "ubuntu" ]]; then
 	"$HOME/dotfiles/scripts/install-go.sh"
 	export PATH="/usr/local/go/bin:$HOME/go/bin:$PATH"
 
-	# Infelizmente vamos ter que buildar o neovim do zero
-	# os repositórios do Ubuntu/Debian não têm versão recente
-	if ! command -v nvim &>/dev/null; then
-		loginfo "Compiling and Installing nvim..."
-		git clone https://github.com/neovim/neovim.git ~/neovim
-		cd ~/neovim
-		git checkout stable
-		make CMAKE_BUILD_TYPE=Release
-		cd build
-		sudo cpack -G DEB
-		sudo dpkg -i nvim-linux*.deb
-		cd ~
-		sudo rm -Rf ~/neovim
-	else
-		loginfo "nvim já instalado..."
-	fi
+	# Neovim compilado da última release (o apt não tem versão recente).
+	# Também atualiza uma instalação antiga — o vimtex exige versões novas.
+	"$HOME/dotfiles/scripts/install-nvim.sh"
+
+	# tree-sitter CLI (≥ 0.26.1, exigido pelo nvim-treesitter) e lazygit em ~/.local/bin
+	"$HOME/dotfiles/scripts/install-tools.sh"
 
 	if ! command -v zsh &>/dev/null; then
 		loginfo "Installing ZSH..."
@@ -143,13 +133,19 @@ if [[ "$OP_SYSTEM" == "ubuntu" ]]; then
 		loginfo "zsh já instalado..."
 	fi
 
-	if ! command -v latexmk &>/dev/null; then
-		loginfo "Instalando ferramentas LaTeX..."
-		sudo apt install texlive-latex-extra texlive-fonts-recommended \
-			texlive-lang-portuguese latexmk zathura zathura-pdf-poppler -y
-		logsuccess "Ferramentas LaTeX instaladas."
-	else
-		loginfo "latexmk já instalado, pulando LaTeX..."
+	# apt é idempotente: roda sempre para adicionar pacotes novos da lista
+	loginfo "Instalando ferramentas LaTeX..."
+	sudo apt install texlive-latex-extra texlive-fonts-recommended \
+		texlive-lang-portuguese texlive-bibtex-extra biber chktex latexmk \
+		zathura zathura-pdf-poppler xdotool -y
+	logsuccess "Ferramentas LaTeX instaladas."
+
+	# Dicionário pt para o spell do Neovim (não vem no runtime)
+	NVIM_SPELL_DIR="$HOME/.local/share/nvim/site/spell"
+	if [ ! -f "$NVIM_SPELL_DIR/pt.utf-8.spl" ]; then
+		mkdir -p "$NVIM_SPELL_DIR"
+		curl -fsSL "https://ftp.nluug.nl/pub/vim/runtime/spell/pt.utf-8.spl" \
+			-o "$NVIM_SPELL_DIR/pt.utf-8.spl"
 	fi
 
 	if ! command -v ghostty &>/dev/null; then
@@ -254,12 +250,11 @@ echo ""
 echo "1. Execute 'nvm install --lts'"
 echo "2. Execute 'nvm install-latest-npm'"
 echo "3. Execute 'npm i -g prettier'"
-echo "4. Execute 'npm i -g tree-sitter-cli'  # necessário para o nvim-treesitter compilar parsers"
-echo "5. Execute 'pyenv install 3.13.5' (ou versões mais novas)"
-echo "6. Execute 'pyenv global 3.13.5' (ou versões mais novas)"
-echo "7. Execute 'uv tool install pyright'"
-echo "8. Execute 'uv tool install ruff'"
-echo "9. Execute 'fabric --setup' e selecione Ollama como provedor"
+echo "4. Execute 'pyenv install 3.13.5' (ou versões mais novas)"
+echo "5. Execute 'pyenv global 3.13.5' (ou versões mais novas)"
+echo "6. Execute 'uv tool install pyright'"
+echo "7. Execute 'uv tool install ruff'"
+echo "8. Execute 'fabric --setup' e selecione Ollama como provedor"
 echo "   (o endpoint já está em OLLAMA_HOST; modelo padrão configurado: gemma4)"
 echo ""
 echo "Para criar um virtualenv por projeto:"
@@ -323,6 +318,11 @@ for pattern_dir in "$HOME/dotfiles/fabric/patterns"/*/; do
     fabric_patterns+=("$pattern_name")
 done
 logsuccess "Padrões fabric configurados: ${fabric_patterns[*]}"
+
+# Zathura (visualizador de PDF do vimtex) — tema ativo copiado mais abaixo
+mkdir -p "$HOME/.config/zathura"
+rm -f "$HOME/.config/zathura/zathurarc"
+ln -sf "$HOME/dotfiles/zathura/zathurarc" "$HOME/.config/zathura/zathurarc"
 
 # fastfetch
 mkdir -p "$HOME/.config/fastfetch"
@@ -419,6 +419,7 @@ fi
 loginfo "Configurando arquivos de tema inicial (${THEME_MODE})..."
 cp "$HOME/dotfiles/tmux/theme-${THEME_MODE}.conf" "$HOME/.tmux-theme.conf"
 cp "$HOME/dotfiles/ghostty/themes/${THEME_MODE}.conf" "$HOME/.theme-active-ghostty.conf"
+cp "$HOME/dotfiles/zathura/themes/${THEME_MODE}" "$HOME/.config/zathura/theme-active"
 logsuccess "Arquivos de tema inicial configurados (~/.tmux-theme.conf, ~/.theme-active-ghostty.conf)."
 echo -e "
 [1;33mATENÇÃO: Passos manuais necessários:[0m"
