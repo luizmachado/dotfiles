@@ -17,7 +17,7 @@ dotfiles/
 ├── git/              # .gitconfig
 ├── fabric/           # Padrões customizados do fabric (LLM CLI)
 ├── fastfetch/        # Configuração do fastfetch
-├── scripts/          # Scripts utilitários
+├── scripts/          # toggle-theme.sh, install-go.sh, zsh_history_sync.py
 ├── docs/             # Documentação por ferramenta
 └── install.sh        # Script de instalação completo
 ```
@@ -29,7 +29,9 @@ dotfiles/
 - **Linux only** — Ubuntu 24.04 e Debian 12. Sem suporte a macOS.
 - **Idempotente** — `install.sh` pode ser rodado múltiplas vezes sem efeitos colaterais.
 - **Não-destrutivo** — configs do sistema são modificadas de forma aditiva (includes, patches via sed). O `~/.config/i3/config` original nunca é substituído.
-- **Tema unificado** — Tokyo Night em todo o stack: Neovim, tmux, Ghostty, FZF, i3wm, rofi.
+- **Tema** — Tokyo Night em Neovim, tmux, i3wm e rofi; Ghostty, prompt zsh e FZF usam a paleta própria `omtheme`.
+  Modo dark/light alternado por `scripts/toggle-theme.sh` (estado em `~/.theme-mode`).
+- **Sem Homebrew** — pacotes via apt; Go via tarball oficial (`scripts/install-go.sh`).
 - **Nerd Fonts** — JetBrainsMono Nerd Font instalada em `~/.local/share/fonts/NerdFonts/` para ícones no i3bar, rofi e terminal.
 
 ---
@@ -71,20 +73,25 @@ Nunca usar vírgulas em argumentos de `exec` no config (ex.: `-modi drun,run` ca
 | Parse error no `exec` do i3 | Vírgula em args interpretada como separador | Usar `rofi -show drun` (sem `-modi`) |
 | `go install fabric` falha | Main package movido para `cmd/fabric` | `go install github.com/danielmiessler/fabric/cmd/fabric@latest` |
 | Nerd Font sem ícones | Fonte não instalada ou nome errado no pango | Nome correto: `JetBrainsMono Nerd Font` |
+| install.sh apaga ~/.pyenv ou ~/.nvm | `command -v pyenv/nvm` falha no script (fora do PATH / nvm é função) | Testar diretório/arquivo (`[ -d ~/.pyenv ]`, `[ -s ~/.nvm/nvm.sh ]`) |
+| `fd` não encontrado | Debian/Ubuntu instalam como `fdfind` | install.sh cria `~/.local/bin/fd → fdfind` |
 
 ---
 
 ## Pacotes instalados pelo install.sh
 
 **apt:** git, build-essential, ripgrep, fzf, bat, tmux, zsh, tree, htop, ffmpeg,
-fonts-firacode, fonts-jetbrains-mono, rofi, picom, fontconfig, lua5.4, unzip, xclip,
+fonts-firacode, fonts-jetbrains-mono, rofi, picom, fontconfig, fd-find, flameshot, libnotify-bin,
+p7zip-full, lua5.4, unzip, xclip,
 texlive-latex-extra, texlive-fonts-recommended, texlive-lang-portuguese, latexmk, zathura, zathura-pdf-poppler
 
-**Homebrew:** gcc, go, neovim (compilado do source)
+**Go:** tarball oficial em `/usr/local/go` (`scripts/install-go.sh`, também chamado pelo `updateall`)
+
+**Neovim:** compilado do source (branch `stable`) e instalado como .deb via cpack
 
 **Fontes:** JetBrainsMono Nerd Font (GitHub Releases → `~/.local/share/fonts/NerdFonts/`)
 
-**Go:** `fabric` (`github.com/danielmiessler/fabric/cmd/fabric@latest`)
+**Go (go install):** `fabric` (`github.com/danielmiessler/fabric/cmd/fabric@latest`)
 
 **Node (manual pós-install):** prettier, tree-sitter-cli
 
@@ -105,7 +112,11 @@ texlive-latex-extra, texlive-fonts-recommended, texlive-lang-portuguese, latexmk
 | `~/.config/nvim` | `dotfiles/nvim/` |
 | `~/.config/ghostty` | `dotfiles/ghostty/` |
 | `~/.config/i3/luiz_dotfiles.conf` | `dotfiles/i3/luiz.conf` |
-| `~/.config/i3/theme.conf` | `dotfiles/i3/theme.conf` |
+| `~/.config/i3/theme.conf` | `dotfiles/i3/theme.conf` ou `theme-light.conf` (conforme `~/.theme-mode`) |
 | `~/.config/i3status/config` | `dotfiles/i3/i3status.conf` |
-| `~/.config/rofi/config.rasi` | `dotfiles/i3/rofi/config.rasi` |
+| `~/.config/rofi/config.rasi` | `dotfiles/i3/rofi/config.rasi` ou `config-light.rasi` |
+| `~/.config/fastfetch/config.jsonc` | `dotfiles/fastfetch/config.jsonc` |
 | `~/.config/fabric/patterns/*` | `dotfiles/fabric/patterns/*` |
+
+Cópias (não symlinks), reescritas pelo `toggle-theme.sh`: `~/.tmux-theme.conf` ← `tmux/theme-{mode}.conf`,
+`~/.theme-active-ghostty.conf` ← `ghostty/themes/{mode}.conf`.

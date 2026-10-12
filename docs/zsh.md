@@ -46,18 +46,17 @@ Habilitado com `bindkey -v`.
 | `gitreset` | `git add . && git reset --hard` | Descarta todas as mudanças |
 | `pipupgrade` | `pip list --outdated \| ... pip install -U` | Atualiza todos os pacotes pip |
 | `pipdeleteall` | `pip freeze \| xargs pip uninstall -y` | Remove todos os pacotes pip |
-| `killcode` | `pkill -f "Visual Studio Code"` | Mata o VS Code |
-| `killchrome` | `pkill -f "Google Chrome"` | Mata o Chrome |
-| `killnode` | `pkill -f node` | Mata processos node |
-| `killpython` | `pkill -f python` | Mata processos python |
-| `killffmpeg` | `pkill -f ffmpeg` | Mata processos ffmpeg |
-| `killadobe` | `pkill -f Adobe` | Mata todos os processos Adobe |
+| `killpython` | `pkill -9 -f python` | Mata processos python |
+| `killfirefox` | `pkill -9 -f firefox` | Mata o Firefox |
+| `vi` | `nvim` | Redireciona vi para nvim |
 | `nano` | `nvim` | Redireciona nano para nvim |
 | `zs` | `source ~/.zshrc` | Recarrega a configuração do shell |
 | `tre` | `tree` ignorando .git, node_modules, __pycache__, .venv, dist | Tree limpo |
-| `j` | `just` | Atalho para o task runner just |
+| `cria_commit`, `corrige_pt`, `cria_instrucao` | `fabric --pattern ...` | Padrões customizados do fabric |
 | `makenote` | `tmux new-window ...make_note.sh` | Abre nota rápida no tmux |
 | `s` | `sudo` | Atalho para sudo |
+
+Clipboard: use `clipcopy` / `clippaste` (nativos do Oh My Zsh, via xclip).
 
 ---
 
@@ -86,20 +85,20 @@ Habilitado com `bindkey -v`.
 | Função | Descrição | Uso |
 |---|---|---|
 | `aula_c filename` | Comprime vídeo para 1080p H.264 com lanczos | `aula_c aula01.mp4` |
-| `convert_for_youtube -i input -o output [-s]` | Converte para YouTube (H.264, AAC 48kHz, 192kbps); `-s` adiciona lofi de fundo | `convert_for_youtube -i raw.mp4 -o final.mp4` |
+| `convert_for_youtube -i input [-o output]` | Converte para YouTube (H.264/libx264, AAC 48kHz, 192kbps); saída padrão em `~/Videos` | `convert_for_youtube -i raw.mp4 -o final.mp4` |
 
 ### Sistema e utilitários
 
 | Função | Descrição | Uso |
 |---|---|---|
 | `memoryUsage pattern` | Mostra uso de memória em MB dos processos que batem com o padrão | `memoryUsage node` |
-| `deletePythonCache` | Remove `__pycache__`, `.pytest_cache`, `.tox`, `*.egg-info`, `build`, `dist`, `.pyc`, `.pyo` | `deletePythonCache` |
+| `deletePythonCache` | Remove `__pycache__`, `.pytest_cache`, `.tox`, `*.egg-info`, `build`, `dist`, `.pyc`, `.pyo` (ignora `.git`, `node_modules` e venvs) | `deletePythonCache` |
 | `show_colors` | Exibe todas as 256 cores do terminal com seus códigos | `show_colors` |
-| `gitconfig name email` | Configura git interativamente (nome, email, autocrlf, eol) | `gitconfig "Luiz" "email@..."` |
+| `gitconfig` | Inicializa repo e configura git interativamente (nome, email, autocrlf, eol) | `gitconfig` |
 | `help [command]` | Ajuda de builtins bash (zsh não tem help nativo) | `help cd` |
-| `backup_ssh` | Faz backup criptografado (7z) do diretório .ssh no Desktop | `backup_ssh` |
-| `killgui` | Para a interface gráfica (sddm + wayland) | `killgui` |
-| `startgui` | Inicia a interface gráfica | `startgui` |
+| `backup_ssh` | Faz backup criptografado (7z) do diretório .ssh na Área de trabalho (`xdg-user-dir DESKTOP`) | `backup_ssh` |
+| `killgui` | Para a interface gráfica (`display-manager.service` → `multi-user.target`) | `killgui` |
+| `startgui` | Inicia a interface gráfica (`graphical.target`) | `startgui` |
 
 ### Tmux
 

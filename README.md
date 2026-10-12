@@ -74,21 +74,22 @@ Configuração modular carregada pelo `.zshrc`. Os arquivos ficam em `zsh/config
 
 **`config/exports`**
 - `EDITOR` e `VISUAL` apontam para `nvim`
-- FZF com esquema de cores Tokyo Night
+- FZF com a paleta `omtheme`
 - `NVM` para Node.js e `pyenv` para Python
 - `OLLAMA_HOST` configurado para servidor LLM local
-- `uv`, `Bun`, `PNPM` no PATH
+- `uv` e Go (`/usr/local/go`, `~/go/bin`) no PATH
 
 **`config/aliases`**
 - `gitlog` — log bonito no terminal
-- `killcode`, `killchrome`, `killnode`, `killpython`, `killffmpeg` — mata processos
-- `nano` → `nvim`
-- `updateall` — atualiza tudo de uma vez
+- `killpython`, `killfirefox` — mata processos
+- `nano`, `vi` → `nvim`
+- `cria_commit`, `corrige_pt`, `cria_instrucao` — padrões do fabric
 - `makenote` — abre nvim em janela flutuante do tmux para anotações
 - `tre` — tree ignorando `node_modules`, `.git`, `__pycache__`
-- `j` → `just`, `zs` → `source ~/.zshrc`
+- `zs` → `source ~/.zshrc`
+- Clipboard: `clipcopy` / `clippaste` (nativos do Oh My Zsh)
 
-**`config/functions`** (arquivo mais complexo, ~522 linhas)
+**`config/functions`** (arquivo mais complexo)
 - `componentTs` / `componentJs` — cria estrutura de componente React
 - `dtouch` — `mkdir -p` + `touch` em um comando
 - `convert_for_youtube` — converte vídeo com FFmpeg para upload no YouTube
@@ -98,7 +99,7 @@ Configuração modular carregada pelo `.zshrc`. Os arquivos ficam em `zsh/config
 - `tmux_respawn_all` — reseta e resincroniza histórico em todos os panes
 - `sshc` — wrapper de SSH que indica estado no tmux
 - `cleanNeovimLogs` — limpa logs e cache do Neovim
-- `updateall` — atualiza Homebrew, pip, npm, nvim, tmux plugins e histórico
+- `updateall` — atualiza apt, Go, Oh My Zsh, uv, fabric, npm globais e sincroniza o histórico
 - `ollama_stop_all` / `ollama_update_models` — gerencia LLMs locais
 - `backup_ssh` — faz backup criptografado (7zip) do diretório SSH
 

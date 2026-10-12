@@ -51,9 +51,8 @@ Configuração baseada no [LazyVim](https://lazyvim.org). Leader: `<Space>`. Loc
 | Atalho | Modo | Ação |
 |---|---|---|
 | `<leader>cv` | n | Selecionar virtualenv (venv-selector) |
-| `<leader>cV` | n | Selecionar virtualenv do cache |
 
-Ao abrir um arquivo `.py`, o plugin verifica se existe `.python-version` no projeto e reconfigura o LSP automaticamente. Utiliza virtualenvs do pyenv em `~/.pyenv/versions`.
+Configurado pelo extra `lang.python` do LazyVim. O venv-selector encontra os virtualenvs do pyenv em `~/.pyenv/versions` (busca padrão do plugin, requer `fd`) e reativa automaticamente o último venv usado no projeto.
 
 ### REPL (iron.nvim + NotebookNavigator)
 
