@@ -11,11 +11,10 @@ if [ "$CURRENT_SESSION" = "$SESSION_NAME" ]; then
   tmux detach-client
 else
 
-  tmux send-keys "$(tmux display-message -p '#{pane_name}')" C-m
   # We are not in a popup, then check if a session exist
   if ! tmux has-session -t "$SESSION_NAME" 2> /dev/null; then
       # If not, we create it
-      tmux new-session -d -s "$SESSION_NAME" -c "$HOME" -n "$WINDOW_NAME" -c "$CURDIR"
+      tmux new-session -d -s "$SESSION_NAME" -n "$WINDOW_NAME" -c "$CURDIR"
       tmux set -t "$SESSION_NAME" status off
   fi
 

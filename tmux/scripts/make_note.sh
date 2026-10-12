@@ -1,31 +1,33 @@
 #!/usr/bin/env bash
 
 CURDIR=$(pwd)
-nvim -c 'startinsert' /tmp/quicknote.tmp
-RAW_NOTE="${1:-$(cat /tmp/quicknote.tmp)}"
-rm /tmp/quicknote.tmp
+NOTE_FILE=$(mktemp --suffix=.md)
+trap 'rm -f "$NOTE_FILE"' EXIT
+
+nvim -c 'startinsert' "$NOTE_FILE"
+RAW_NOTE="${1:-$(cat "$NOTE_FILE")}"
 
 [[ -z "$RAW_NOTE" ]] && exit 1
 cd "${PROJECTS_DIR}/notes" || exit 1
 
-PROMPT=""
+PROMPT=$(cat <<EOF
+Read AGENTS.md in the current directory before doing anything else.
+It contains all instructions for how to handle the note below.
 
-PROMPT+="Read AGENTS.md in the current directory before doing anything else.\n"
-PROMPT+="It contains all instructions for how to handle the note below.\n"
-PROMPT+="\n"
-PROMPT+="Raw note:\n"
-PROMPT+="${RAW_NOTE}\n"
-PROMPT+="\n"
-PROMPT+="Current date: $(date "+%Y-%m-%dT%H:%M:%S")\n"
-PROMPT+="\n"
-PROMPT+="Execute completely: write the file, commit, and push.\n"
+Raw note:
+${RAW_NOTE}
+
+Current date: $(date "+%Y-%m-%dT%H:%M:%S")
+
+Execute completely: write the file, commit, and push.
+EOF
+)
 
 # codex exec "$PROMPT" --yolo
 # gemini -y -p "$PROMPT"
-claude --model claude-opus-4-6 -p "$PROMPT" --dangerously-skip-permissions
+claude --model opus -p "$PROMPT" --dangerously-skip-permissions
 
 # This does not work in tmux popups
 # nohup gemini -p "$PROMPT" -y > /dev/null 2>&1 < /dev/null &
 
 cd "${CURDIR}" || exit 1
-
