@@ -301,6 +301,12 @@ ln -sf "$HOME/dotfiles/vim/.vimrc" "$HOME/.vimrc"
 # Neovim
 rm -Rf "$HOME/.config/nvim"
 ln -sf "$HOME/dotfiles/nvim" "$HOME/.config/nvim"
+loginfo "Instalando/atualizando plugins do Neovim (Lazy sync)..."
+if nvim --headless "+Lazy! sync" +qa; then
+	logsuccess "Plugins do Neovim sincronizados."
+else
+	logwarning "Falha no Lazy sync; abra o nvim e rode :Lazy sync."
+fi
 
 # Ghostty
 rm -Rf "$HOME/.config/ghostty"
@@ -426,7 +432,7 @@ echo -e "
 echo ""
 echo "ABRA OUTRO TERMINAL (NOVAMENTE) - NÃO USE ESSA INSTÂNCIA"
 echo ""
-echo "1. Abra o Neovim ('nvim') para que o Lazy.nvim possa instalar todos os plugins."
+echo "1. Abra o Neovim ('nvim') e confira o :Lazy (plugins já sincronizados pelo install.sh)."
 echo "2. Inicie o Tmux e pressione 'prefix + I' (Ctrl+b + I) para instalar os plugins do TPM."
 echo "3. Reinicie seu terminal para que todas as alterações tenham efeito."
 echo ""

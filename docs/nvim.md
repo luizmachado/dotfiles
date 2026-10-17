@@ -10,6 +10,7 @@ Configuração baseada no [LazyVim](https://lazyvim.org). Leader: `<Space>`. Loc
 |---|---|
 | `yanky` | Histórico de yanks com ring de clipboard |
 | `dial` | Incrementa/decrementa números, datas e valores especiais |
+| `telescope` | Telescope como picker do LazyVim (no lugar do Snacks; exigido pelo Telekasten) |
 | `json` | LSP, schema validation e Treesitter para JSON/JSON5/JSONC |
 | `python` | LSP (basedpyright), DAP (debugpy), ruff, Treesitter python+toml |
 | `mini-hipatterns` | Destaca cores hex e classes Tailwind inline |
@@ -45,6 +46,38 @@ Configuração baseada no [LazyVim](https://lazyvim.org). Leader: `<Space>`. Loc
 | `<leader>/` | n | Grep (root) |
 | `<leader>fg` | n | Live grep |
 | `<leader>f*` | n | Grep pela palavra sob o cursor |
+| `<leader>gc` | n | Commits do git |
+| `<leader>s/` | n | Histórico de buscas |
+| `<leader>so` | n | Opções do Vim |
+
+O picker é o Telescope (`vim.g.lazyvim_picker = "telescope"` em `options.lua`). Dentro dele: `s`/`<C-s>`
+pula com o flash, `<C-t>` manda para o Trouble, `<A-h>`/`<A-i>` mostram arquivos ocultos/ignorados e
+`<C-/>` (insert) ou `?` (normal) listam os atalhos. O `<Esc>` vai para o modo normal do prompt, e um
+segundo `<Esc>` fecha.
+
+Atalhos que existiam só com o Snacks picker e **não** estão disponíveis: `<leader>fp`, `<leader>gd`/`gD`,
+`<leader>gi`/`gI`, `<leader>gp`/`gP`, `<leader>sB`, `<leader>si`, `<leader>sp`, `<leader>su`.
+
+### Notas (Telekasten)
+
+Notas em `~/zettelkasten`. Configuração em `lua/plugins/telekasten.lua`.
+
+| Atalho | Modo | Ação |
+|---|---|---|
+| `<leader>zp` | n | Painel de comandos |
+| `<leader>zf` | n | Buscar notas por título |
+| `<leader>zg` | n | Buscar no conteúdo das notas |
+| `<leader>zd` | n | Nota de hoje |
+| `<leader>zz` | n | Seguir link |
+| `<leader>zn` | n | Nova nota |
+| `<leader>zc` | n | Calendário |
+| `<leader>zb` | n | Backlinks |
+| `<leader>zI` | n | Inserir link de imagem |
+| `<leader>zl` | n | Inserir link |
+| `[[` | i | Inserir link (só em markdown) |
+| `<leader>cal` / `<leader>caL` | n | Calendário vertical / horizontal (calendar-vim) |
+
+Por causa do `<leader>cal`/`<leader>caL`, o `<leader>ca` (Code Action) espera o `timeoutlen`. Isso é intencional.
 
 ### Python e virtualenv
 
@@ -212,7 +245,9 @@ biblatex usa `biber` + `texlive-bibtex-extra`. Os parsers treesitter exigem o `t
 | bufferline.nvim | Tabs de buffers na parte superior |
 | lualine.nvim | Status bar inferior |
 | noice.nvim | UI melhorada para mensagens e command line |
-| snacks.nvim | Notificações, animações, bufdelete, picker |
+| snacks.nvim | Notificações, animações, bufdelete, toggles |
+| telescope.nvim | Picker (arquivos, grep, LSP, git…) com fzf-native |
+| telekasten.nvim | Notas Zettelkasten em markdown (+ calendar-vim) |
 | flash.nvim | Navegação rápida por caracteres/treesitter |
 | grug-far.nvim | Busca e substituição multi-arquivo |
 | todo-comments.nvim | Destaque de TODO/FIXME/HACK no código |

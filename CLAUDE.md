@@ -78,6 +78,7 @@ Nunca usar vírgulas em argumentos de `exec` no config (ex.: `-modi drun,run` ca
 | `fd` não encontrado | Debian/Ubuntu instalam como `fdfind` | install.sh cria `~/.local/bin/fd → fdfind` |
 | `VimTeX does not support your version of Vim` | vimtex atualizado exige Neovim mais novo | `scripts/install-nvim.sh` (também no `updateall`) |
 | nvim-treesitter não compila parsers | `tree-sitter` CLI do apt/npm antigo (precisa ≥ 0.26.1) | `scripts/install-tools.sh` (binário em `~/.local/bin`, que vem antes no PATH) |
+| `<leader>ca` (Code Action) demora | calendar-vim (dependência do Telekasten) mapeia `<leader>cal`/`<leader>caL` | Intencional: mantido para acessar o calendário |
 
 ---
 
@@ -92,6 +93,8 @@ latexmk, zathura, zathura-pdf-poppler, xdotool
 **Go:** tarball oficial em `/usr/local/go` (`scripts/install-go.sh`, também chamado pelo `updateall`)
 
 **Neovim:** última release compilada do source e instalada como .deb via cpack (`scripts/install-nvim.sh`)
+
+**Plugins do Neovim:** `nvim --headless "+Lazy! sync" +qa` no `install.sh` e no `updateall` (versões em `nvim/lazy-lock.json`, versionado). Picker: Telescope (`vim.g.lazyvim_picker`), exigido pelo Telekasten.
 
 **~/.local/bin (GitHub Releases, `scripts/install-tools.sh`):** tree-sitter CLI, lazygit
 
