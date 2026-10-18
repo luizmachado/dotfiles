@@ -18,7 +18,7 @@ dotfiles/
 ├── fabric/           # Padrões customizados do fabric (LLM CLI)
 ├── fastfetch/        # Configuração do fastfetch
 ├── zathura/          # Visualizador de PDF (vimtex) + temas dark/light
-├── scripts/          # toggle-theme.sh, install-{go,nvim,tools}.sh, zsh_history_sync.py
+├── scripts/          # toggle-theme.sh, notes-popup.sh, install-{go,nvim,tools}.sh, zsh_history_sync.py
 ├── docs/             # Documentação por ferramenta
 └── install.sh        # Script de instalação completo
 ```

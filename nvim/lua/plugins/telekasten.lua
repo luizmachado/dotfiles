@@ -51,6 +51,9 @@ return {
     -- Carrega também ao abrir uma nota direto, para ela já receber ft=telekasten
     event = { "BufReadPre " .. home .. "/*.md", "BufNewFile " .. home .. "/*.md" },
     init = function()
+      -- Usado pelo atalho do i3 (scripts/notes-popup.sh reuniao)
+      vim.api.nvim_create_user_command("NotaReuniao", new_meeting, { desc = "Nova nota de reunião" })
+
       -- Parser markdown nas notas (ft=telekasten): habilita render-markdown e treesitter
       vim.treesitter.language.register("markdown", "telekasten")
 
@@ -73,6 +76,8 @@ return {
       dailies = home .. "/diario",
       templates = home .. "/templates",
       template_new_daily = home .. "/templates/diaria.md",
+      -- goto_today abre a diária direto, sem o picker do Telescope
+      journal_auto_open = true,
     },
     keys = {
       { "<leader>zp", "<cmd>Telekasten panel<cr>",           desc = "Notas: painel de comandos" },

@@ -76,14 +76,14 @@ mesmo sem usar um atalho `<leader>z…` antes.
 | `<leader>zp` | n | Painel de comandos |
 | `<leader>zf` | n | Buscar notas por título |
 | `<leader>zg` | n | Buscar no conteúdo das notas |
-| `<leader>zd` | n | Nota de hoje |
+| `<leader>zd` | n | Nota de hoje (abre direto, sem picker) |
 | `<leader>zz` | n | Seguir link |
 | `<leader>zn` | n | Nova nota |
 | `<leader>zc` | n | Calendário |
 | `<leader>zb` | n | Backlinks |
 | `<leader>zI` | n | Inserir link de imagem |
 | `<leader>zl` | n | Inserir link |
-| `<leader>zm` | n | Nova nota de reunião |
+| `<leader>zm` | n | Nova nota de reunião (também `:NotaReuniao`) |
 | `[[` | i | Inserir link (só em markdown) |
 | `<leader>cal` / `<leader>caL` | n | Calendário vertical / horizontal (calendar-vim) |
 
