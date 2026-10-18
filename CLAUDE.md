@@ -79,6 +79,7 @@ Nunca usar vírgulas em argumentos de `exec` no config (ex.: `-modi drun,run` ca
 | `VimTeX does not support your version of Vim` | vimtex atualizado exige Neovim mais novo | `scripts/install-nvim.sh` (também no `updateall`) |
 | nvim-treesitter não compila parsers | `tree-sitter` CLI do apt/npm antigo (precisa ≥ 0.26.1) | `scripts/install-tools.sh` (binário em `~/.local/bin`, que vem antes no PATH) |
 | `<leader>ca` (Code Action) demora | calendar-vim (dependência do Telekasten) mapeia `<leader>cal`/`<leader>caL` | Intencional: mantido para acessar o calendário |
+| Nota do Telekasten sem render/LSP ou sem cores de `[[link]]`/`#tag` | ft `telekasten` não tem parser; o `treesitter.start` desliga o syntax regex | `telekasten.lua`: `language.register("markdown", "telekasten")` + reativa `syntax=telekasten` no FileType; marksman com `get_language_id` → markdown |
 
 ---
 

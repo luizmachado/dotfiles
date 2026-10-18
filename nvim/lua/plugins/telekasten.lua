@@ -23,6 +23,24 @@ return {
       "renerocksai/calendar-vim",
     },
     cmd = "Telekasten",
+    init = function()
+      -- Parser markdown nas notas (ft=telekasten): habilita render-markdown e treesitter
+      vim.treesitter.language.register("markdown", "telekasten")
+
+      -- O treesitter.start do LazyVim desliga o syntax regex; reativa o do Telekasten
+      -- (tkLink, tkTag, tkBrackets) por cima do highlight treesitter
+      vim.api.nvim_create_autocmd("FileType", {
+        group = vim.api.nvim_create_augroup("luiz_telekasten_syntax", { clear = true }),
+        pattern = "telekasten",
+        callback = function(ev)
+          vim.schedule(function()
+            if vim.api.nvim_buf_is_valid(ev.buf) then
+              vim.bo[ev.buf].syntax = "telekasten"
+            end
+          end)
+        end,
+      })
+    end,
     opts = {
       home = vim.fn.expand("~/zettelkasten"),
     },

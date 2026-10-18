@@ -79,6 +79,21 @@ Notas em `~/zettelkasten`. Configuração em `lua/plugins/telekasten.lua`.
 
 Por causa do `<leader>cal`/`<leader>caL`, o `<leader>ca` (Code Action) espera o `timeoutlen`. Isso é intencional.
 
+### Markdown (render-markdown + marksman)
+
+Configuração em `lua/plugins/markdown.lua`. Só o render-markdown e o LSP marksman (sem markdownlint,
+prettier ou preview no navegador do extra `lang.markdown`).
+
+| Atalho | Modo | Ação |
+|---|---|---|
+| `<leader>um` | n | Toggle da renderização de markdown |
+| `gd` | n | Seguir `[[link]]` / link markdown (marksman) |
+| `gr` | n | Referências / backlinks (marksman) |
+
+Vale também para as notas do Telekasten (ft `telekasten`): o parser markdown é registrado para esse
+filetype e o marksman recebe a nota como markdown. O syntax do Telekasten (`[[links]]`, `#tags`)
+é reativado por cima do highlight do treesitter.
+
 ### Python e virtualenv
 
 | Atalho | Modo | Ação |
@@ -248,6 +263,7 @@ biblatex usa `biber` + `texlive-bibtex-extra`. Os parsers treesitter exigem o `t
 | snacks.nvim | Notificações, animações, bufdelete, toggles |
 | telescope.nvim | Picker (arquivos, grep, LSP, git…) com fzf-native |
 | telekasten.nvim | Notas Zettelkasten em markdown (+ calendar-vim) |
+| render-markdown.nvim | Renderiza títulos, listas, código e tabelas de markdown no buffer |
 | flash.nvim | Navegação rápida por caracteres/treesitter |
 | grug-far.nvim | Busca e substituição multi-arquivo |
 | todo-comments.nvim | Destaque de TODO/FIXME/HACK no código |
