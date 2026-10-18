@@ -3,6 +3,31 @@
 -- (por isso <leader>ca, Code Action, espera o timeoutlen)
 
 local md = { "markdown", "telekasten" }
+local home = vim.fn.expand("~/notes")
+
+-- Nova nota de reunião em reunioes/AAAA-MM-DD-<título>.md, a partir de templates/reuniao.md
+local function new_meeting()
+  vim.ui.input({ prompt = "Reunião: " }, function(title)
+    if not title or vim.trim(title) == "" then
+      return
+    end
+    title = vim.trim(title):gsub("/", "-")
+    local dir = home .. "/reunioes"
+    local path = ("%s/%s-%s.md"):format(dir, os.date("%Y-%m-%d"), title)
+
+    if vim.fn.filereadable(path) == 0 then
+      -- Mesma substituição de variáveis ({{title}}, {{date}}…) que o Telekasten usa
+      local subst = require("telekasten.templates").subst_templated_values
+      local lines = {}
+      for _, line in ipairs(vim.fn.readfile(home .. "/templates/reuniao.md")) do
+        table.insert(lines, subst(line, title, nil, nil, 1))
+      end
+      vim.fn.mkdir(dir, "p")
+      vim.fn.writefile(lines, path)
+    end
+    vim.cmd.edit(vim.fn.fnameescape(path))
+  end)
+end
 
 return {
   {
@@ -23,6 +48,8 @@ return {
       "renerocksai/calendar-vim",
     },
     cmd = "Telekasten",
+    -- Carrega também ao abrir uma nota direto, para ela já receber ft=telekasten
+    event = { "BufReadPre " .. home .. "/*.md", "BufNewFile " .. home .. "/*.md" },
     init = function()
       -- Parser markdown nas notas (ft=telekasten): habilita render-markdown e treesitter
       vim.treesitter.language.register("markdown", "telekasten")
@@ -42,7 +69,10 @@ return {
       })
     end,
     opts = {
-      home = vim.fn.expand("~/zettelkasten"),
+      home = home,
+      dailies = home .. "/diario",
+      templates = home .. "/templates",
+      template_new_daily = home .. "/templates/diaria.md",
     },
     keys = {
       { "<leader>zp", "<cmd>Telekasten panel<cr>",           desc = "Notas: painel de comandos" },
@@ -55,6 +85,7 @@ return {
       { "<leader>zb", "<cmd>Telekasten show_backlinks<cr>",  desc = "Notas: backlinks" },
       { "<leader>zI", "<cmd>Telekasten insert_img_link<cr>", desc = "Notas: inserir imagem" },
       { "<leader>zl", "<cmd>Telekasten insert_link<cr>",     desc = "Notas: inserir link" },
+      { "<leader>zm", new_meeting,                           desc = "Notas: nova reunião" },
       -- Só em markdown: nos outros arquivos o [ fica com o mini.pairs, sem atraso
       { "[[", "<cmd>Telekasten insert_link<cr>", mode = "i", ft = md, desc = "Notas: inserir link" },
     },

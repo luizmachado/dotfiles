@@ -60,7 +60,16 @@ Atalhos que existiam só com o Snacks picker e **não** estão disponíveis: `<l
 
 ### Notas (Telekasten)
 
-Notas em `~/zettelkasten`. Configuração em `lua/plugins/telekasten.lua`.
+Notas em `~/notes` (arquivos `.md`). Configuração em `lua/plugins/telekasten.lua`.
+
+| Pasta | Conteúdo |
+|---|---|
+| `~/notes/diario/` | Notas diárias (`<leader>zd`), criadas com `templates/diaria.md` |
+| `~/notes/reunioes/` | Notas de reunião (`<leader>zm`), `AAAA-MM-DD-<título>.md`, criadas com `templates/reuniao.md` |
+| `~/notes/templates/` | Templates (variáveis do Telekasten: `{{title}}`, `{{date}}`, `{{time24}}`, `{{prevday}}`…) |
+
+O Telekasten carrega ao abrir qualquer `.md` de `~/notes`, então a nota já abre com ft `telekasten`
+mesmo sem usar um atalho `<leader>z…` antes.
 
 | Atalho | Modo | Ação |
 |---|---|---|
@@ -74,6 +83,7 @@ Notas em `~/zettelkasten`. Configuração em `lua/plugins/telekasten.lua`.
 | `<leader>zb` | n | Backlinks |
 | `<leader>zI` | n | Inserir link de imagem |
 | `<leader>zl` | n | Inserir link |
+| `<leader>zm` | n | Nova nota de reunião |
 | `[[` | i | Inserir link (só em markdown) |
 | `<leader>cal` / `<leader>caL` | n | Calendário vertical / horizontal (calendar-vim) |
 
