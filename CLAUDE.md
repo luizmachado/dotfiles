@@ -97,7 +97,8 @@ latexmk, zathura, zathura-pdf-poppler, xdotool
 
 **Plugins do Neovim:** `nvim --headless "+Lazy! sync" +qa` no `install.sh` e no `updateall` (versões em `nvim/lazy-lock.json`, versionado). Picker: Telescope (`vim.g.lazyvim_picker`), exigido pelo Telekasten.
 
-**~/.local/bin (GitHub Releases, `scripts/install-tools.sh`):** tree-sitter CLI, lazygit
+**~/.local/bin (GitHub Releases, `scripts/install-tools.sh`):** tree-sitter CLI, lazygit,
+videobay (GUI do yt-dlp, só x86_64; versão em `~/.local/share/videobay/version`, atalho `$mod+y` no i3, `.desktop` para o rofi)
 
 **Spell:** `pt.utf-8.spl` em `~/.local/share/nvim/site/spell/`
 
